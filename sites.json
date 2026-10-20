@@ -112,5 +112,13 @@
     "source_commit": "ea7459e20b449a8577a30b84a224b61501f6fc2c",
     "original_url": "https://kenkenta51-max.github.io/ami-hair-atelier/",
     "public_directory": "dist"
+  },
+  {
+    "slug": "mirai-code-lab",
+    "title": "MIRAI CODE LAB — 小学生向けプログラミングスクール",
+    "source_repository": "ChatGPT Sites / mirai-code-lab-preview",
+    "source_commit": "652da538e9a600a3423b7ed40332fb8d40324330",
+    "original_url": "https://mirai-code-lab-preview.movix.chatgpt.site",
+    "public_directory": "."
   }
 ]

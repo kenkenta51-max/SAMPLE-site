@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+from zipfile import ZipFile, ZIP_DEFLATED
 from html import escape
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,6 +40,12 @@ def main():
                 dest = target / relative
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(file, dest)
+        if site['slug'] == 'mirai-code-lab':
+            archive = target / 'downloads' / 'MIRAI_CODE_LAB_sections_04-09.zip'
+            archive.parent.mkdir(parents=True, exist_ok=True)
+            with ZipFile(archive, 'w', ZIP_DEFLATED) as bundle:
+                for image in sorted((target / 'designs').glob('*.png')):
+                    bundle.write(image, image.name)
         if not (target / 'index.html').is_file():
             raise RuntimeError('Missing entry point: ' + site['slug'])
     cards = '\n'.join(

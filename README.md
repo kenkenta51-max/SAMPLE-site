@@ -1,6 +1,6 @@
 # Sample Site
 
-16件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+17件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開予定URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全16サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全17サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -62,3 +62,11 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 ## 検証
 
 実施結果・残っている制約は `MIGRATION.md` に記載します。
+
+## MIRAI CODE LABの追加
+
+`sites/mirai-code-lab/` に完成版LPを追加しています。FV・01〜09の全セクション、FAQ、動作デモ、体験案内を含みます。予約送信は行いません。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/mirai-code-lab/
+
+04〜09のデザイン案は`designs.html`から確認できます。画像6枚のZIPはビルド時に生成します。
