@@ -55,15 +55,21 @@ KURAHAUSは既存ビルドを使い、49ページのリンク・canonical・サ�
 
 ## 検証範囲と制約
 
-- 新規公開は未完了。接続から `kenkenta51-max/SAMPLE-site` を取得すると404となり、GitHub一覧にもない。現在のCLI認証も401で失敗する。接続済みGitHubアプリでの既存リポジトリ読み取りは成功する。
+- 統合先 `kenkenta51-max/SAMPLE-site` の作成を確認し、GitHub連携で16サイトを登録済み。通常のGit送信は認証エラーのため、連携APIから全ファイルとフォルダ構成を登録した。各ファイルとリポジトリ全体の構成の識別値がローカル検証済みデータと一致する。公開処理の結果は下記に記録する。
 - Google Fontsを使うAO WORKSとドーナツサイトは、検証環境の通信制限により代替フォントで確認。同じ条件で移行前後を比較しているため、外部フォント取得時の見え方は別途公開後に確認が必要。
 - ドーナツとAmiには移行前からの画面外へのはみ出しがある。375pxではそれぞれ約11px・34px、768pxのAmiでは約39px。移行前後で同じ値・同じ描画であり、今回の移行に起因する差分ではない。元の内容を保つため変更していない。
 - 操作は主要導線の確認であり、ゲーム全ステージ・全入力パターンの網羅検証ではない。楽器の実スピーカー音は聴取していない。
 - 既存サイトのURLを新URLへ転送する設定は含まない。元サイトは今までのURLで残る。
 
-## 公開予定
+## GitHub登録・公開予定
 
 一覧: https://kenkenta51-max.github.io/SAMPLE-site/
 各サイト: https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/
 
-統合先リポジトリと書き込み認証が用意できたら、保持したコミットをpushし、GitHub PagesをActions方式で設定する。デプロイの成功と公開URLを確認して完了とする。
+初回登録コミット: `3b6f49443a8658cc0b123f394ceaf222efbde735`。
+
+公開ワークフロー: https://github.com/kenkenta51-max/SAMPLE-site/actions/runs/39445494412
+
+GitHub Actions上のビルド・65ページの内部参照検査・公開用ファイルのアップロードは成功。公開ジョブは、初回Pages有効化で `Resource not accessible by integration` となった。サイトはまだ公開されていない。
+
+リポジトリ所有者が Settings → Pages → Build and deployment → Source を GitHub Actions に変更した後、失敗した公開ジョブを再実行する。
