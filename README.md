@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全19サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全20サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -82,3 +82,9 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 `sites/big-burger-diner/` に、アメリカンダイナー風のハンバーガー店LPとモバイルオーダーを追加しています。FVはスクロールに合わせて120枚の連番画像（`assets/frames/`）をcanvasで再生し、バーガーが分解・合体します。お店の紹介・味のこだわり・メニュー（サイズ／トッピング／セットのカスタマイズ、カート、注文確認〜完了）・アクセスを含みます。Canvaのメニュー表をもとに制作し、注文・決済はデモ、住所などの店舗情報は仮のものです。
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/big-burger-diner/
+
+## MELUA CLINICの追加
+
+`sites/melua-clinic/` に架空の医療脱毛クリニックの完成版LPを追加しました。FVから最終予約CTAまで、料金プラン切り替え・自然な産毛による肌比較スライダー・FAQを含みます。予約はデモ表示です。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/melua-clinic/

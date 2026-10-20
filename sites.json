@@ -136,5 +136,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "."
+  },
+  {
+    "slug": "melua-clinic",
+    "title": "MELUA CLINIC — メルアクリニック",
+    "source_repository": "ChatGPT Sites / melua-clinic-fv",
+    "source_commit": "f2303dfab981c88a1a0c20250d3bc5bbaf728f80",
+    "original_url": "https://melua-clinic-fv.movix.chatgpt.site",
+    "public_directory": "."
   }
 ]
