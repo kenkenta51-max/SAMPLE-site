@@ -120,5 +120,13 @@
     "source_commit": "652da538e9a600a3423b7ed40332fb8d40324330",
     "original_url": "https://mirai-code-lab-preview.movix.chatgpt.site",
     "public_directory": "."
+  },
+  {
+    "slug": "float-wash",
+    "title": "FLOAT WASH — 宇宙をテーマにしたコインランドリー",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "."
   }
 ]

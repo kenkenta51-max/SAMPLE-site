@@ -1,8 +1,8 @@
 # Sample Site
 
-17件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+18件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
-**公開予定URL:** https://kenkenta51-max.github.io/SAMPLE-site/
+**公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
 ## サイトを更新する
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全17サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全18サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -70,3 +70,9 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/mirai-code-lab/
 
 04〜09のデザイン案は`designs.html`から確認できます。画像6枚のZIPはビルド時に生成します。
+
+## FLOAT WASHの追加
+
+`sites/float-wash/` に、宇宙をテーマにした架空のコインランドリーの完成版を追加しています。スクロールに連動するFV、タップでの自動演出、洗濯コースのデモ、FAQ、料金の試算を含みます。写真・CSS・JavaScriptを1つのHTMLに内包しています。実際の予約・決済は行いません。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/float-wash/
