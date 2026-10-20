@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SkillShift AI Academy｜全体ワイヤーフレーム v2</title>
+  <style>
+    :root{
+      --ink:#172033;--sub:#566071;--line:#cbd1da;--soft:#f2f4f7;
+      --paper:#fff;--dark:#293244;--accent:#dfe5ec;--note:#fff7d6;
+      --max:1120px;--radius:14px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:#e9ecf0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.75}
+    a{color:inherit}
+    button{font:inherit}
+    .page{max-width:1440px;margin:auto;background:var(--paper);box-shadow:0 0 28px rgba(0,0,0,.08)}
+    .wrap{width:min(var(--max),calc(100% - 48px));margin:auto}
+    .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#737c89;font-weight:700;margin:0 0 10px}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(38px,5vw,70px);line-height:1.16;letter-spacing:-.04em;margin-bottom:24px}
+    h2{font-size:clamp(28px,3.3vw,44px);line-height:1.3;letter-spacing:-.025em;margin-bottom:18px}
+    h3{font-size:20px;line-height:1.5;margin-bottom:10px}
+    .lead{font-size:18px;color:var(--sub);max-width:760px}
+    .muted{color:var(--sub)}
+    .small{font-size:13px;color:var(--sub)}
+    .wire-note{background:var(--note);border:1px solid #ddcf94;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.55;color:#62582f}
+    .placeholder{border:1.5px dashed #8c95a4;background:repeating-linear-gradient(135deg,#f7f8fa,#f7f8fa 12px,#eef1f4 12px,#eef1f4 24px);display:grid;place-items:center;color:#687282;text-align:center;min-height:180px;padding:20px;border-radius:12px;font-size:13px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:999px;background:var(--dark);color:white;text-decoration:none;font-weight:700;border:2px solid var(--dark)}
+    .btn.outline{background:white;color:var(--dark)}
+    .section{padding:96px 0;border-top:1px solid var(--line);position:relative}
+    .section.soft{background:var(--soft)}
+    .section.dark{background:var(--dark);color:white}
+    .section.dark .muted,.section.dark .lead,.section.dark .small{color:#d1d6df}
+    .section-number{position:absolute;top:22px;left:max(24px,calc((100% - var(--max))/2));font-size:11px;letter-spacing:.12em;color:#7d8694;font-weight:800}
+    .center{text-align:center}.center .lead{margin-left:auto;margin-right:auto}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .stack{display:grid;gap:14px}
+    .header{height:76px;display:flex;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);z-index:20}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo{font-weight:800;letter-spacing:-.025em}.logo span{font-weight:500;color:var(--sub)}
+    .nav{display:flex;align-items:center;gap:22px;font-size:13px}.nav a{text-decoration:none}.nav .btn{min-height:42px;padding:0 20px}
+    .hero{padding:72px 0 46px;background:linear-gradient(115deg,#fff 0 61%,#eef1f4 61%)}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+    .hero-copy{font-size:19px;color:var(--sub);max-width:630px;margin-bottom:28px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}.chip{border:1px solid #9ea6b1;background:#fff;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700}
+    .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.hero-actions small{color:var(--sub)}
+    .hero-visual{position:relative}.hero-visual .placeholder{min-height:500px;border-radius:18px}.screen{position:absolute;right:-24px;bottom:22px;width:74%;background:white;border:1px solid #abb2bd;border-radius:12px;padding:15px;box-shadow:0 14px 30px rgba(0,0,0,.12)}
+    .screen-bar{height:9px;width:48%;background:#a7afbb;border-radius:8px;margin-bottom:13px}.screen-row{display:grid;grid-template-columns:70px 1fr;gap:8px;margin-top:8px}.screen-row i{height:7px;background:#d7dbe1;border-radius:8px}
+    .proofbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;background:white}
+    .proof-grid{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:0;align-items:center}.proof-item{padding:6px 24px;border-left:1px solid var(--line)}.proof-item strong{display:block;font-size:24px;line-height:1.2}.proof-item span{font-size:12px;color:var(--sub)}
+    .pain-layout{display:grid;grid-template-columns:.75fr 1.25fr;gap:80px;align-items:start}
+    .pain-list{border-top:1px solid #99a1ad}.pain{display:grid;grid-template-columns:46px 1fr;gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}.pain b{width:42px;height:42px;border:1px solid #9da5b1;border-radius:50%;display:grid;place-items:center;font-size:12px}.pain p{margin:0;font-weight:650}
+    .bridge{margin-top:40px;padding:24px;border-left:4px solid var(--dark);background:var(--soft);font-size:20px;font-weight:700}
+    .compare{display:grid;grid-template-columns:1fr 78px 1fr;gap:0;margin-top:42px}.compare-col{border:1px solid #a9b0bb;background:white}.compare-col.good{border:2px solid var(--dark)}.compare-head{padding:22px;background:#e4e7eb;font-size:20px;font-weight:800}.good .compare-head{background:var(--dark);color:white}.compare-row{padding:20px 22px;border-top:1px solid var(--line)}.compare-row small{display:block;color:var(--sub);margin-bottom:4px}.compare-arrow{display:grid;place-items:center;font-size:28px}
+    .concept-quote{font-size:clamp(30px,4vw,52px);line-height:1.35;font-weight:750;letter-spacing:-.03em;border-left:5px solid var(--dark);padding-left:28px;margin:42px 0 48px}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #9ba3af;border-bottom:1px solid #9ba3af}.pillar{padding:28px}.pillar+.pillar{border-left:1px solid var(--line)}.pillar b{font-size:36px;color:#8a929f}.pillar h3{margin-top:22px}
+    .outcome-list{margin-top:42px}.outcome{display:grid;grid-template-columns:120px 1fr 1.2fr;gap:26px;align-items:center;padding:22px 0;border-top:1px solid var(--line)}.outcome:last-child{border-bottom:1px solid var(--line)}.outcome .tag{font-size:12px;font-weight:800;letter-spacing:.08em}.outcome .old{color:#7b8491}.outcome .new{font-weight:750;font-size:18px}.outcome .new:before{content:"→";margin-right:16px;color:#7c8490}
+    .cta-band{padding:36px 0;background:#dfe4e9;border-top:1px solid #abb2bc;border-bottom:1px solid #abb2bc}.cta-inner{display:flex;justify-content:space-between;align-items:center;gap:30px}.cta-inner p{margin:0}.cta-inner strong{font-size:22px;display:block}
+    .phase{display:grid;grid-template-columns:150px 1fr;gap:32px;padding:32px 0;border-top:1px solid var(--line)}.phase:last-child{border-bottom:1px solid var(--line)}.phase-label span{font-size:12px;color:var(--sub);display:block}.phase-label strong{font-size:25px}.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.module{background:white;border:1px solid #b5bcc6;border-radius:10px;padding:16px}.module b{display:block;font-size:12px;color:#7a8390;margin-bottom:6px}.module p{margin:0;font-weight:650;line-height:1.5}.deliverable{display:block;margin-top:9px;color:var(--sub);font-size:11px;font-weight:400}
+    .schedule{border:1px solid #aeb5bf;background:white;border-radius:14px;padding:24px}.schedule-top{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}.schedule-row{display:grid;grid-template-columns:90px 1fr;gap:14px;margin-top:12px}.schedule-row b{font-size:12px}.schedule-row span{height:28px;background:#e3e6ea;border:1px solid #c0c6ce;border-radius:6px;padding:3px 10px;font-size:12px}
+    .learning-flow{display:grid;gap:0}.learning-step{display:grid;grid-template-columns:52px 1fr;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}.learning-step b{width:48px;height:48px;border-radius:50%;background:var(--dark);color:white;display:grid;place-items:center}.learning-step p{margin:0;color:var(--sub)}
+    .feature-large{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;padding:38px 0;border-top:1px solid var(--line)}.feature-copy .num{font-size:13px;letter-spacing:.1em;color:#737b88}.feature-copy h3{font-size:28px;margin-top:8px}.feature-small{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.feature-box{border:1px solid #adb4bf;padding:25px;border-radius:12px;background:white}
+    .case-tabs{display:flex;gap:8px;margin:28px 0 18px}.case-tabs button{padding:10px 18px;border:1px solid #9ea6b1;background:white;border-radius:999px;cursor:pointer}.case-tabs button.active{background:var(--dark);color:white}.case{display:none;border:1px solid #9fa7b3;border-radius:16px;overflow:hidden;background:white}.case.active{display:grid;grid-template-columns:220px 1fr}.case-profile{background:#e5e8ec;padding:30px}.avatar{width:90px;height:90px;border-radius:50%;margin-bottom:24px}.case-body{padding:30px}.case-change{display:grid;grid-template-columns:1fr 48px 1fr;gap:18px;align-items:stretch}.case-panel{padding:20px;background:var(--soft);border-radius:10px}.case-panel.after{background:#e1e5ea;border:2px solid var(--dark)}.case-arrow{display:grid;place-items:center;font-size:24px}.case-quote{margin-top:20px;padding-top:20px;border-top:1px solid var(--line);font-style:italic}
+    .teacher{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center}.teacher .placeholder{min-height:430px}.trust-list{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #9ea6b2;margin-top:28px}.trust-list div{padding:18px 10px;border-bottom:1px solid var(--line)}.trust-list div:nth-child(even){border-left:1px solid var(--line)}.trust-list strong{font-size:24px;display:block}
+    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;margin-top:42px}.plan{border:1px solid #9ea6b2;border-radius:14px;padding:26px;background:white;display:flex;flex-direction:column}.plan.recommended{border:3px solid var(--dark);transform:translateY(-12px)}.recommend-label{background:var(--dark);color:white;margin:-26px -26px 22px;padding:8px;text-align:center;border-radius:10px 10px 0 0;font-size:12px;font-weight:800}.price{font-size:33px;font-weight:800;letter-spacing:-.03em}.plan ul{padding-left:20px;flex:1}.plan .btn{width:100%;margin-top:16px}.plan-note{margin-top:22px;text-align:center}
+    .support-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.support{background:white;border:1px solid #b0b7c1;border-radius:12px;padding:20px}.support .icon{width:42px;height:42px;border:1px solid #9fa7b2;border-radius:50%;display:grid;place-items:center;margin-bottom:30px}
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:38px}.flow-step{position:relative;padding:0 24px 24px;border-top:3px solid var(--dark)}.flow-step:before{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:var(--dark);top:-9px;left:24px}.flow-step b{font-size:38px;color:#949ca8;display:block;margin-top:18px}.flow-step p{color:var(--sub)}
+    .faq{max-width:850px;margin:36px auto 0;border-top:1px solid #9da5b0}.faq details{border-bottom:1px solid var(--line);padding:0 6px}.faq summary{list-style:none;cursor:pointer;padding:22px 38px 22px 0;font-weight:700;position:relative}.faq summary::-webkit-details-marker{display:none}.faq summary:after{content:"＋";position:absolute;right:5px}.faq details[open] summary:after{content:"−"}.faq details p{color:var(--sub);padding:0 0 20px 30px}
+    .briefing{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:start}.briefing-list{display:grid;gap:12px;margin:28px 0}.briefing-list div{display:grid;grid-template-columns:36px 1fr;gap:12px}.briefing-list b{width:34px;height:34px;border:1px solid #9fa7b2;border-radius:50%;display:grid;place-items:center}.booking{background:white;color:var(--ink);border-radius:16px;padding:28px}.form-line{height:48px;border:1px solid #aeb5bf;border-radius:8px;margin-top:14px;padding:11px;color:#7c8592;font-size:13px}.booking .btn{width:100%;margin-top:18px}
+    .final{text-align:center;padding:110px 0;background:#f5f6f8}.final h2{font-size:clamp(34px,5vw,60px);max-width:860px;margin-left:auto;margin-right:auto}.final .lead{margin:0 auto 30px}.reassure{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:22px}.reassure span{font-size:12px;color:var(--sub)}
+    footer{background:#1c2433;color:#ccd2dc;padding:36px 0;font-size:12px}.footer-inner{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+    .legend{position:fixed;right:18px;bottom:18px;z-index:30}.legend button{border:1px solid #919aa7;background:#fff;border-radius:999px;padding:10px 16px;font-size:12px;box-shadow:0 5px 16px rgba(0,0,0,.13);cursor:pointer}.notes-hidden .wire-note,.notes-hidden .section-number{display:none}
+    @media(max-width:820px){
+      .wrap{width:min(100% - 32px,var(--max))}.nav a:not(.btn){display:none}.header{height:66px}.section{padding:72px 0}.hero{padding:48px 0 30px;background:white}.hero-grid,.grid-2,.pain-layout,.teacher,.support-layout,.briefing{grid-template-columns:1fr;gap:32px}.hero-visual .placeholder{min-height:330px}.screen{right:8px}.proof-grid{grid-template-columns:1fr 1fr}.proof-item{border:0;border-top:1px solid var(--line);padding:14px}.proof-item:first-child{grid-column:1/-1}.compare{grid-template-columns:1fr}.compare-arrow{height:55px;transform:rotate(90deg)}.pillars{grid-template-columns:1fr}.pillar+.pillar{border-left:0;border-top:1px solid var(--line)}.outcome{grid-template-columns:74px 1fr}.outcome .new{grid-column:1/-1}.cta-inner{align-items:flex-start;flex-direction:column}.phase{grid-template-columns:1fr}.modules{grid-template-columns:1fr 1fr}.feature-large{grid-template-columns:1fr;gap:22px}.feature-small{grid-template-columns:1fr}.case.active{grid-template-columns:1fr}.case-profile{display:grid;grid-template-columns:90px 1fr;gap:18px}.case-change{grid-template-columns:1fr}.case-arrow{height:28px;transform:rotate(90deg)}.pricing{grid-template-columns:1fr}.plan.recommended{transform:none}.support-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr;row-gap:28px}.section-number{left:16px;top:14px}}
+    @media(max-width:520px){h1{font-size:40px}.hero-actions .btn{width:100%}.proof-grid,.modules,.support-grid,.flow,.trust-list{grid-template-columns:1fr}.trust-list div:nth-child(even){border-left:0}.case-tabs{overflow:auto}.case-tabs button{white-space:nowrap}.case-profile{grid-template-columns:70px 1fr}.avatar{width:70px;height:70px}.booking{padding:20px}.reassure{align-items:center;flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="page" id="page">
+  <header class="header">
+    <div class="wrap header-inner">
+      <div class="logo">SkillShift <span>AI Academy</span></div>
+      <nav class="nav" aria-label="主要メニュー">
+        <a href="#curriculum">カリキュラム</a><a href="#cases">受講者事例</a><a href="#price">料金</a><a href="#faq">よくある質問</a>
+        <a class="btn" href="#briefing">無料説明会に参加する</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="chips"><span class="chip">AI初心者向け</span><span class="chip">オンライン完結</span><span class="chip">会社員の実務特化</span></div>
+          <h1>AIを、<br>仕事で使える<br>スキルに。</h1>
+          <p class="hero-copy">ChatGPTを触るだけで終わらせない。営業・資料作成・リサーチ・副業まで、会社員が明日から使えるAI活用を実践形式で学ぶオンラインスクール。</p>
+          <div class="hero-actions"><a class="btn" href="#briefing">無料説明会に参加する</a><small>参加無料・オンライン開催<br>無理な勧誘はありません</small></div>
+        </div>
+        <div class="hero-visual">
+          <div class="placeholder">メイン写真<br>自然光のあるオフィスでAIを使う30代会社員<br>※人物の視線は画面へ</div>
+          <div class="screen" aria-label="AI業務画面のイメージ"><div class="screen-bar"></div><div class="screen-row"><i></i><i></i></div><div class="screen-row"><i></i><i></i></div><div class="screen-row"><i></i><i></i></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="proofbar">
+      <div class="wrap proof-grid">
+        <div><b>信頼情報をFV直下で提示</b><div class="small">数値は公開前に実データ・調査条件へ差し替え</div></div>
+        <div class="proof-item"><strong>〔1,200〕名</strong><span>累計受講者数</span></div>
+        <div class="proof-item"><strong>〔92〕%</strong><span>学習継続率</span></div>
+        <div class="proof-item"><strong>14日以内</strong><span>全額返金保証</span></div>
+      </div>
+    </div>
+
+    <section class="section" id="pain">
+      <span class="section-number">02 / EMPATHY</span>
+      <div class="wrap pain-layout">
+        <div>
+          <p class="eyebrow">Your concern</p><h2>AIは気になる。<br>でも、仕事での使い方が分からない。</h2>
+          <p class="lead">そう感じている会社員は、あなただけではありません。</p>
+          <div class="wire-note">イナズマ塾型：抽象的な「AIが不安」ではなく、会社員の日常場面まで具体化します。</div>
+        </div>
+        <div class="pain-list">
+          <div class="pain"><b>01</b><p>何から、どの順番で学べばいいか分からない</p></div>
+          <div class="pain"><b>02</b><p>ChatGPTに聞いても、思った回答が返ってこない</p></div>
+          <div class="pain"><b>03</b><p>メール・資料・営業にどう使うのか想像できない</p></div>
+          <div class="pain"><b>04</b><p>プログラミング未経験の自分には難しそう</p></div>
+          <div class="pain"><b>05</b><p>独学だと、分からないところで止まってしまう</p></div>
+          <div class="pain"><b>06</b><p>ツールが多すぎて、自分に必要なものを選べない</p></div>
+        </div>
+      </div>
+      <div class="wrap"><div class="bridge">必要なのは、AIの知識を増やすことではなく、<br>「自分の仕事で使う練習」をすることです。</div></div>
+    </section>
+
+    <section class="section soft" id="gap">
+      <span class="section-number">03 / GAP</span>
+      <div class="wrap center"><p class="eyebrow">The difference</p><h2>同じAIを使っても、仕事の進み方には差がつく。</h2><p class="lead">違いは才能やITスキルではなく、「成果につながる使い方」を知っているかどうかです。</p></div>
+      <div class="wrap compare">
+        <div class="compare-col"><div class="compare-head">AIを使えていない状態</div><div class="compare-row"><small>資料作成</small>1時間かけて構成から考える</div><div class="compare-row"><small>メール</small>毎回ゼロから文面を考える</div><div class="compare-row"><small>リサーチ</small>検索と読み込みで半日かかる</div><div class="compare-row"><small>副業</small>情報収集だけで行動できない</div></div>
+        <div class="compare-arrow">→</div>
+        <div class="compare-col good"><div class="compare-head">AIを仕事の相棒にできる状態</div><div class="compare-row"><small>資料作成</small>10分で骨子を作り、精査へ時間を使う</div><div class="compare-row"><small>メール</small>下書きをAIに任せ、調整して送る</div><div class="compare-row"><small>リサーチ</small>要点を短時間で整理して判断する</div><div class="compare-row"><small>副業</small>AIでできることから小さく始める</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <span class="section-number">04 / CONCEPT</span>
+      <div class="wrap"><p class="eyebrow">What is SkillShift?</p><h2>SkillShift AI Academyとは</h2><div class="concept-quote">「AIを学ぶ」で終わらせず、<br>明日の仕事で使えるところまで。</div><div class="grid-2"><div class="placeholder">講座画面＋実務課題のコラージュ<br>メール／提案書／リサーチ／Excel</div><div><p class="lead">ChatGPT・Claude・Codexなどの生成AIを、営業・事務・企画の実務や副業に活かす方法を学ぶオンラインスクールです。</p><p class="muted">操作方法の暗記ではなく、自分の業務を題材に「考える→試す→添削を受ける」を繰り返します。プログラミング経験がなくても、成果物を作りながら段階的に身につけられます。</p></div></div>
+        <div class="pillars"><div class="pillar"><b>01</b><h3>実務直結</h3><p class="muted">仕事で使うメール・資料・データを題材に学ぶ。</p></div><div class="pillar"><b>02</b><h3>初心者設計</h3><p class="muted">基礎から順番に学び、専門用語に置いていかれない。</p></div><div class="pillar"><b>03</b><h3>伴走サポート</h3><p class="muted">質問と個別相談で、分からないまま止まらない。</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="outcomes">
+      <span class="section-number">05 / OUTCOMES</span>
+      <div class="wrap"><p class="eyebrow">What you can do</p><h2>「何を学ぶか」より、<br>「何ができるようになるか」。</h2><p class="lead">受講後の変化を、会社員の具体的な作業で示します。</p>
+        <div class="outcome-list">
+          <div class="outcome"><span class="tag">DOCUMENT</span><span class="old">資料の構成に1時間</span><span class="new">10分で骨子を作り、内容の質を上げる</span></div>
+          <div class="outcome"><span class="tag">WRITING</span><span class="old">メールを毎回ゼロから作成</span><span class="new">用途別プロンプトで下書きをすぐ作る</span></div>
+          <div class="outcome"><span class="tag">RESEARCH</span><span class="old">検索結果を何ページも確認</span><span class="new">論点と出典を整理して短時間で把握</span></div>
+          <div class="outcome"><span class="tag">DATA</span><span class="old">Excelの集計・整理で消耗</span><span class="new">AIに手順を聞き、ミスを減らして処理</span></div>
+          <div class="outcome"><span class="tag">CREATION</span><span class="old">Web制作は自分には無理</span><span class="new">Codexで簡単なページやツールを形にする</span></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="cta-band"><div class="wrap cta-inner"><p><strong>自分の仕事で何が変わるか、無料説明会で確認できます。</strong><span class="small">講座内容・仕事別の活用例・学習プランをご案内します。</span></p><a class="btn" href="#briefing">無料説明会に参加する</a></div></aside>
+
+    <section class="section soft" id="curriculum">
+      <span class="section-number">06 / CURRICULUM</span>
+      <div class="wrap"><p class="eyebrow">Curriculum</p><h2>基礎から実務、副業まで。<br>迷わない3段階のカリキュラム。</h2><p class="lead">10講座を同じ大きさで並べず、「今どの段階か」が分かる学習ロードマップとして見せます。</p>
+        <div class="phase"><div class="phase-label"><span>PHASE 01</span><strong>基礎</strong><p class="small">AIに正しく頼む</p></div><div class="modules"><div class="module"><b>LESSON 01</b><p>ChatGPT基礎<span class="deliverable">成果物：基本操作チェック</span></p></div><div class="module"><b>LESSON 02</b><p>プロンプト設計<span class="deliverable">成果物：自分専用テンプレ</span></p></div><div class="module"><b>LESSON 03</b><p>メール・文章作成<span class="deliverable">成果物：業務メール3種</span></p></div></div></div>
+        <div class="phase"><div class="phase-label"><span>PHASE 02</span><strong>実務</strong><p class="small">毎日の仕事で使う</p></div><div class="modules"><div class="module"><b>LESSON 04</b><p>情報収集・リサーチ<span class="deliverable">成果物：調査レポート</span></p></div><div class="module"><b>LESSON 05</b><p>資料作成<span class="deliverable">成果物：提案書の骨子</span></p></div><div class="module"><b>LESSON 06</b><p>Excel・データ整理<span class="deliverable">成果物：集計手順</span></p></div><div class="module"><b>LESSON 07</b><p>営業業務への活用<span class="deliverable">成果物：商談準備セット</span></p></div><div class="module"><b>LESSON 08</b><p>Claude活用<span class="deliverable">成果物：長文資料の要約</span></p></div></div></div>
+        <div class="phase"><div class="phase-label"><span>PHASE 03</span><strong>発展</strong><p class="small">できることを広げる</p></div><div class="modules"><div class="module"><b>LESSON 09</b><p>CodexでWeb制作<span class="deliverable">成果物：簡単なWebページ</span></p></div><div class="module"><b>LESSON 10</b><p>AI副業入門<span class="deliverable">成果物：行動プラン</span></p></div><div class="module"><b>BONUS</b><p>ツールの選び分け<span class="deliverable">成果物：自分用AIマップ</span></p></div></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="learning">
+      <span class="section-number">07 / LEARNING STYLE</span>
+      <div class="wrap grid-2"><div><p class="eyebrow">Learning style</p><h2>忙しい会社員でも、<br>生活の中で続けられる。</h2><p class="lead">動画を見るだけではなく、短いインプットと実務課題、質問、振り返りを1セットにします。</p><div class="learning-flow"><div class="learning-step"><b>1</b><div><h3>動画で基礎を学ぶ</h3><p>1本10〜20分。通勤時間や空き時間でも進められます。</p></div></div><div class="learning-step"><b>2</b><div><h3>仕事に近い課題で試す</h3><p>メール、提案書、Excelなど成果物を実際に作ります。</p></div></div><div class="learning-step"><b>3</b><div><h3>チャットで質問する</h3><p>止まったところを抱え込まず、その場で解消します。</p></div></div><div class="learning-step"><b>4</b><div><h3>個別相談で軌道修正</h3><p>目的に合った使い方へ調整します（プラン別）。</p></div></div></div></div>
+        <div><div class="schedule"><div class="schedule-top"><strong>会社員Aさんの学習例</strong><span class="small">週2〜3時間</span></div><div class="schedule-row"><b>月曜 通勤</b><span>動画 15分</span></div><div class="schedule-row"><b>水曜 夜</b><span>実務課題 40分</span></div><div class="schedule-row"><b>木曜 昼</b><span>チャット質問 10分</span></div><div class="schedule-row"><b>土曜 朝</b><span>復習・実践 60分</span></div></div><div class="placeholder" style="min-height:220px;margin-top:18px">スマホ教材画面＋PC課題画面<br>実際の受講場面を具体化</div></div>
+      </div>
+    </section>
+
+    <section class="section soft" id="reasons">
+      <span class="section-number">08 / REASONS</span>
+      <div class="wrap"><p class="eyebrow">Why SkillShift?</p><h2>ツールの使い方だけでは、<br>仕事は変わらないから。</h2>
+        <div class="feature-large"><div class="feature-copy"><span class="num">REASON 01</span><h3>実務フローに沿って学べる</h3><p class="muted">「ChatGPTの機能紹介」ではなく、資料作成・メール・リサーチ・営業など、仕事の流れの中でどこにAIを入れるかまで学びます。</p></div><div class="placeholder">業務フロー図<br>依頼 → AI下書き → 人が確認 → 完成</div></div>
+        <div class="feature-large"><div class="placeholder">プロンプトの改善例<br>曖昧な依頼 → 構造化した依頼 → 出力比較</div><div class="feature-copy"><span class="num">REASON 02</span><h3>再現できるプロンプト設計</h3><p class="muted">たまたま良い答えが出る使い方ではなく、目的・前提・条件・出力形式を整理し、他の業務にも応用できる考え方を習得します。</p></div></div>
+        <div class="feature-large"><div class="feature-copy"><span class="num">REASON 03</span><h3>一人で止まらない伴走体制</h3><p class="muted">教材だけ渡して終わりではありません。チャット質問と個別相談で、つまずきを早く解消し、学び方を軌道修正できます。</p></div><div class="placeholder">質問画面＋個別相談シーン</div></div>
+        <div class="feature-small"><div class="feature-box"><span class="num">REASON 04</span><h3>複数AIを目的別に使い分け</h3><p class="muted">ChatGPT・Claude・Codexを、得意分野に合わせて選べるようになります。</p></div><div class="feature-box"><span class="num">REASON 05</span><h3>副業への入口までつながる</h3><p class="muted">本業で身につけたAIスキルを、小さな副業へ広げる基本を学べます。</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="cases">
+      <span class="section-number">09 / CASES</span>
+      <div class="wrap"><p class="eyebrow">Student stories</p><h2>受講者の変化</h2><p class="lead">バイテック型：短い感想だけではなく、「悩み→学習内容→仕事の変化」まで一件ずつ具体的に見せます。</p><div class="wire-note">以下は構成用の仮データです。公開時は掲載許可を得た実例・数値・写真へ必ず差し替えます。</div>
+        <div class="case-tabs" role="tablist"><button class="active" data-case="case1">営業職</button><button data-case="case2">事務職</button><button data-case="case3">企画職</button></div>
+        <article class="case active" id="case1"><div class="case-profile"><div class="placeholder avatar">写真</div><div><strong>〔30代・営業職〕</strong><p class="small">受講プラン：スタンダード</p></div></div><div class="case-body"><div class="case-change"><div class="case-panel"><small>BEFORE</small><h3>提案資料に毎回2〜3時間</h3><p class="muted">構成を考えるところから一人で抱えていた。</p></div><div class="case-arrow">→</div><div class="case-panel after"><small>AFTER</small><h3>30分で骨子を作成</h3><p class="muted">顧客に合わせた調整へ時間を使えるように。</p></div></div><p class="case-quote">「自分の実務を題材に相談できたので、翌日の仕事から使えました。」</p></div></article>
+        <article class="case" id="case2"><div class="case-profile"><div class="placeholder avatar">写真</div><div><strong>〔40代・事務職〕</strong><p class="small">受講プラン：ベーシック</p></div></div><div class="case-body"><div class="case-change"><div class="case-panel"><small>BEFORE</small><h3>文章作成と集計に時間がかかる</h3><p class="muted">AIへ何を聞くか分からなかった。</p></div><div class="case-arrow">→</div><div class="case-panel after"><small>AFTER</small><h3>定型業務をテンプレート化</h3><p class="muted">メールとExcel作業を迷わず進められるように。</p></div></div><p class="case-quote">「難しい専門知識ではなく、普段の仕事に置き換えて教えてもらえました。」</p></div></article>
+        <article class="case" id="case3"><div class="case-profile"><div class="placeholder avatar">写真</div><div><strong>〔30代・企画職〕</strong><p class="small">受講プラン：プレミアム</p></div></div><div class="case-body"><div class="case-change"><div class="case-panel"><small>BEFORE</small><h3>調査だけで半日が終わる</h3><p class="muted">情報を集めても整理できなかった。</p></div><div class="case-arrow">→</div><div class="case-panel after"><small>AFTER</small><h3>論点整理から資料化まで効率化</h3><p class="muted">企画を考える時間を確保できるように。</p></div></div><p class="case-quote">「AIに任せる部分と、自分が考える部分の切り分けが分かりました。」</p></div></article>
+      </div>
+    </section>
+
+    <section class="section soft" id="teacher">
+      <span class="section-number">10 / INSTRUCTOR</span>
+      <div class="wrap teacher"><div class="placeholder">講師写真<br>自然な執務・講義シーン<br>正面証明写真にしない</div><div><p class="eyebrow">Instructor</p><h2>実務でAIを使ってきた講師が伴走します。</h2><p class="lead">〔講師名〕<br><span class="small">AI活用支援・法人研修 実務経験〔5年以上〕</span></p><p class="muted">難しい言葉を並べるのではなく、会社員の実際の業務へ置き換えて説明します。「何が分からないか分からない」状態からでも、一緒に整理します。</p><blockquote>「AIは怖いものではありません。正しい頼み方を知れば、誰でも仕事の頼れる相棒にできます。」</blockquote><div class="trust-list"><div><strong>〔5+〕年</strong><span class="small">実務経験</span></div><div><strong>〔120+〕回</strong><span class="small">研修・登壇</span></div><div><strong>営業／企画</strong><span class="small">業務活用に精通</span></div><div><strong>初心者支援</strong><span class="small">専門用語を使わない指導</span></div></div><div class="wire-note" style="margin-top:18px">経歴・数値は仮置き。公開前に証拠資料と一致させます。</div></div></div>
+    </section>
+
+    <section class="section" id="price">
+      <span class="section-number">11 / PRICING</span>
+      <div class="wrap center"><p class="eyebrow">Plans</p><h2>目的とサポート量で選べる3プラン</h2><p class="lead">迷った場合は、無料説明会で現在地と目標を伺い、必要以上のプランを勧めずにご案内します。</p></div>
+      <div class="wrap pricing"><article class="plan"><p class="eyebrow">BASIC</p><h3>ベーシック</h3><p class="small">自分のペースで基礎を学びたい方</p><div class="price">〔98,000円〕</div><ul><li>基礎講座・動画教材</li><li>実務課題</li><li>チャットサポート</li></ul><a class="btn outline" href="#briefing">無料説明会に参加する</a></article><article class="plan recommended"><div class="recommend-label">もっとも選ばれているプラン</div><p class="eyebrow">STANDARD</p><h3>スタンダード</h3><p class="small">伴走を受けながら仕事で使いたい方</p><div class="price">〔178,000円〕</div><ul><li>ベーシックの全内容</li><li>個別コンサル 月2回</li><li>実務課題へのフィードバック</li></ul><a class="btn" href="#briefing">無料説明会に参加する</a></article><article class="plan"><p class="eyebrow">PREMIUM</p><h3>プレミアム</h3><p class="small">副業まで見据えて学びたい方</p><div class="price">〔298,000円〕</div><ul><li>スタンダードの全内容</li><li>副業サポート</li><li>卒業後3か月フォロー</li></ul><a class="btn outline" href="#briefing">無料説明会に参加する</a></article></div>
+      <div class="wrap plan-note"><p class="small">※価格・支払方法・各プランの範囲は未確定です。公開前に正式情報へ差し替えます。</p></div>
+    </section>
+
+    <section class="section soft" id="support">
+      <span class="section-number">12 / SUPPORT</span>
+      <div class="wrap support-layout"><div><p class="eyebrow">Support</p><h2>始める前も、<br>受講中も、<br>一人にしません。</h2><p class="lead">料金・継続・理解度への不安を、仕組みで解消します。</p></div><div class="support-grid"><div class="support"><div class="icon">01</div><h3>14日以内 全額返金保証</h3><p class="small">適用条件を明記し、納得して始められる設計に。</p></div><div class="support"><div class="icon">02</div><h3>チャット質問</h3><p class="small">分からない箇所を抱えずに質問できます。</p></div><div class="support"><div class="icon">03</div><h3>個別相談</h3><p class="small">仕事や目標に合わせて学び方を調整します。</p></div><div class="support"><div class="icon">04</div><h3>卒業後フォロー</h3><p class="small">プレミアムは卒業後3か月も継続支援。</p></div></div></div>
+    </section>
+
+    <section class="section" id="flow">
+      <span class="section-number">13 / FLOW</span>
+      <div class="wrap center"><p class="eyebrow">How to start</p><h2>受講開始までの流れ</h2><p class="lead">無料説明会へ参加しても、受講申込みは必須ではありません。</p></div><div class="wrap flow"><div class="flow-step"><b>01</b><h3>無料説明会</h3><p>フォームから希望日時を選択します。</p></div><div class="flow-step"><b>02</b><h3>個別相談</h3><p>現在の悩みと目標を整理します。</p></div><div class="flow-step"><b>03</b><h3>プラン選択</h3><p>内容に納得した場合のみ申込みます。</p></div><div class="flow-step"><b>04</b><h3>受講開始</h3><p>最短で申込み翌週からスタート。</p></div></div>
+    </section>
+
+    <section class="section soft" id="faq">
+      <span class="section-number">14 / FAQ</span>
+      <div class="wrap center"><p class="eyebrow">FAQ</p><h2>よくある質問</h2></div><div class="wrap faq"><details><summary>Q. パソコン初心者でも大丈夫ですか？</summary><p>基本的なパソコン操作ができれば、プログラミング経験がなくても受講いただけます。</p></details><details><summary>Q. どのくらいの学習時間が必要ですか？</summary><p>目安は週2〜3時間です。動画は好きな時間に視聴でき、ご自身のペースで進められます。</p></details><details><summary>Q. ChatGPT以外のツールも学べますか？</summary><p>ChatGPTに加え、Claude、Codexなど複数の生成AIツールを目的別に学びます。</p></details><details><summary>Q. 副業にも活かせますか？</summary><p>副業入門講座で、スキルを小さな仕事につなげる基本を学べます。</p></details><details><summary>Q. 途中で分からなくなった場合は？</summary><p>チャットサポートと個別相談があるため、一人で止まらずに進められます。</p></details><details><summary>Q. 返金保証の条件を教えてください。</summary><p>受講開始14日以内の全額返金保証を用意しています。正式な適用条件は説明会および規約でご案内します。</p></details></div>
+    </section>
+
+    <section class="section dark" id="briefing">
+      <span class="section-number">15 / FREE BRIEFING</span>
+      <div class="wrap briefing"><div><p class="eyebrow">Free briefing</p><h2>まずは無料説明会で、<br>自分の仕事に使えるか確かめてください。</h2><p class="lead">講座を売り込む場ではなく、現在の悩みと目標を整理し、AIで何を変えられるかを確認する時間です。</p><div class="briefing-list"><div><b>1</b><p>講座のカリキュラムと学習方法</p></div><div><b>2</b><p>営業・事務・企画など仕事別のAI活用例</p></div><div><b>3</b><p>目的に合ったプランとサポート範囲</p></div></div><p class="small">所要時間：約60分／オンライン開催／参加無料／無理な勧誘なし</p></div><div class="booking"><p class="eyebrow">Reservation</p><h3>説明会予約フォーム</h3><div class="form-line">氏名（必須）</div><div class="form-line">メールアドレス（必須）</div><div class="form-line">希望参加日時（必須）</div><div class="form-line">現在のAI活用状況（任意）</div><a class="btn" href="#final">無料説明会に参加する</a><p class="small" style="margin:12px 0 0;text-align:center">入力内容を確認して予約へ進みます</p></div></div>
+    </section>
+
+    <section class="final" id="final"><div class="wrap"><p class="eyebrow">Start your shift</p><h2>AIを、明日から仕事で使えるスキルに。</h2><p class="lead">何から学べばいいか分からない。その悩みを、今日で終わりにしませんか。</p><a class="btn" href="#briefing">無料説明会に参加する</a><div class="reassure"><span>✓ プログラミング未経験OK</span><span>✓ オンライン完結</span><span>✓ 無理な勧誘なし</span></div></div></section>
+  </main>
+
+  <footer><div class="wrap footer-inner"><div><strong>SkillShift AI Academy</strong><br>運営：株式会社SkillShift（架空）</div><div>会社情報　特定商取引法に基づく表記　プライバシーポリシー　お問い合わせ</div><div>© 2026 SkillShift Inc.</div></div></footer>
+</div>
+
+<div class="legend"><button id="noteToggle" type="button">設計注釈を非表示</button></div>
+<script>
+  document.querySelectorAll('[data-case]').forEach(function(button){
+    button.addEventListener('click',function(){
+      document.querySelectorAll('[data-case]').forEach(function(b){b.classList.remove('active')});
+      document.querySelectorAll('.case').forEach(function(c){c.classList.remove('active')});
+      button.classList.add('active');
+      document.getElementById(button.dataset.case).classList.add('active');
+    });
+  });
+  document.getElementById('noteToggle').addEventListener('click',function(){
+    document.body.classList.toggle('notes-hidden');
+    this.textContent=document.body.classList.contains('notes-hidden')?'設計注釈を表示':'設計注釈を非表示';
+  });
+</script>
+</body>
+</html>

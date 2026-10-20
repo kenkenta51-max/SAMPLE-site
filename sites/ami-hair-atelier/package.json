@@ -1,0 +1,15 @@
+{
+  "name": "ami-hair-atelier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ami salon concept website and demo booking",
+  "scripts": {
+    "test": "node tests/check.cjs && node tests/usability.cjs && node tests/color-folio.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+*.log
+.openai/
+.sites-runtime/
+
+# Keep source manuals out of the public repository.
+*.pdf

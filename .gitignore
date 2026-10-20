@@ -1,0 +1,6 @@
+/dist/
+**/site-dist/
+**/__pycache__/
+node_modules/
+
+/.preview/

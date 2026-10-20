@@ -1,0 +1,186 @@
+/* Readability and interaction refinements; retain the original salon art direction. */
+:root{--muted:#685b50;--accent-ink:#86543f}
+body{font-size:16px}
+p,dd,label,button,a,select,input{overflow-wrap:anywhere}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent-ink);outline-offset:4px}
+.hero-en,.script,.quiz-decoration,.quiz-option>span:first-child,.asterisk{color:var(--accent-ink)}
+.hero-description,.concept-copy p:not(.eyebrow),.diagnosis-head>p:not(.eyebrow),.style-card p,.menu-description,.detail-copy p:not(.eyebrow),.quiz-result p,.visit p:not(.eyebrow),.staff-message p,.success>p{font-size:16px;line-height:1.9}
+.section{padding-top:88px;padding-bottom:88px}
+.styles,.staff-section{padding-top:32px}
+.eyebrow,.card-meta,.image-note,.hero-caption,.swipe-hint,.staff-label>span,.visit-info dt{font-size:12px}
+.side-note,.diagnosis-small,.menu-name small,.menu-cost small,.selection-panel label:not(.check-option),.check-option,.check-option span,.selection-total span,.selection-panel>small,.staff-grid article>p,.staff-message small,.detail-copy small,.quiz-result .result-note,.quiz-footer,.quiz-restart,.book-note,.booking-demo,.field,.time-caption,.booking-error,.confirm-list dt,.visit-info small,footer p,footer>a:last-child{font-size:13px;line-height:1.8}
+.menu-name{font-size:17px;min-width:0}
+.menu-name small{margin-top:5px}
+.menu-cost{font-size:27px}
+.menu-choice{gap:14px}
+.menu-description{padding-left:31px}
+.selection-panel{padding:28px}
+.selection-panel h3{font-size:25px}
+.selection-panel select,.field input,.field select{font-size:16px;min-height:48px}
+.check-option{gap:9px;min-height:44px;cursor:pointer;align-items:center}
+.check-option input{width:20px;height:20px;flex-shrink:0}
+.check-option span{margin-left:0}
+.text-link,.staff-grid .text-link{font-size:14px;min-height:44px}
+.button,.header-book,.mobile-bar>a,.mobile-bar>button{font-size:15px;min-height:48px}
+.button{gap:16px}
+.button span{flex-shrink:0}
+.hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;margin-top:25px}
+.hero-diagnosis{width:auto;border:1px solid var(--accent-ink);background:transparent;color:var(--accent-ink);padding:14px 19px;min-height:52px}
+.hero-diagnosis:hover{background:#eee3d8}
+.hero .hero-menu-link{font-size:14px;margin:0;padding:10px 0;gap:14px;min-height:48px}
+.tabs button{min-height:44px;font-size:14px;padding:8px 18px}
+.gallery-controls{gap:10px}
+.gallery-controls button,.hero-caption button,.close-dialog{min-width:44px;min-height:44px}
+.gallery-controls button{font-size:20px}
+.close-dialog{right:12px;top:12px}
+.quiz-option{font-size:16px;min-height:52px;gap:12px}
+.quiz-option>span:first-child{flex-shrink:0}
+.quiz-option>span:last-child{flex-shrink:0}
+.quiz-question{max-width:100%;padding-right:15px;line-height:1.7}
+.quiz-decoration{display:none}
+.quiz-number{color:#80634e}
+.diagnosis-small{color:var(--muted)}
+.quiz-footer{align-items:center;gap:12px;flex-wrap:wrap}
+.quiz-footer button,.quiz-restart{min-height:44px;padding:8px 5px}
+.quiz-result .photo{float:none;width:100%;max-width:230px;margin:18px auto}
+.quiz-result h3{font-size:30px}
+.swatches{display:flex;flex-wrap:wrap;gap:9px;clear:both;margin:20px 0}
+.swatch{display:flex;align-items:center;gap:10px;flex:1 1 210px;width:auto;height:auto;min-height:48px;padding:9px 12px;border:1px solid var(--line);border-radius:3px;background:var(--paper);outline:none;text-align:left;color:var(--ink)}
+.swatch.active{border-color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent-ink);background:#eee3d8}
+.swatch:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+.swatch-dot{width:25px;height:25px;background:var(--swatch);border-radius:50%;flex-shrink:0;border:1px solid #3a332e40}
+.swatch-label{font-size:14px;flex:1;min-width:0;line-height:1.6}
+.swatch-check{font-size:12px;white-space:nowrap;min-width:3em;color:var(--accent-ink);text-align:right}
+.staff-grid article>p{min-height:0}
+.staff-label h3 span{font-size:13px}
+.staff-label{flex-wrap:wrap;gap:8px}
+.visit{background:#78624f}
+.visit-info{min-width:0;max-width:100%}
+.visit-info dl{font-size:15px;grid-template-columns:70px minmax(0,1fr)}
+.visit-info small{opacity:1}
+footer{align-items:flex-start;flex-wrap:wrap}
+footer p{max-width:440px}
+.booking-dialog{width:650px}
+.booking-steps span{font-size:12px;line-height:1.7}
+.booking-content-title{font-size:21px}
+.book-note,.booking-demo{color:var(--muted)}
+.staff-option{font-size:15px;min-height:48px}
+.staff-options{gap:10px}
+.time-grid button{font-size:16px;min-height:48px}
+.field input,.field select{line-height:1.5}
+.booking-customization{border:1px solid var(--line);padding:16px;margin:20px 0}
+.booking-customization legend{font-size:14px;padding:0 7px}
+.booking-customization .field{margin-bottom:10px}
+.booking-customization .check-option{margin:4px 0 0}
+.book-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:18px;font-size:14px;line-height:1.9}
+.book-summary-details{min-width:0}
+.book-summary-details>span{display:block}
+.book-summary-title{font-size:16px;color:var(--ink);font-weight:500}
+.book-summary-details>span:not(:first-child){font-size:13px;color:var(--muted)}
+.book-summary-price{text-align:right;align-self:start}
+.book-summary-price>small,.book-summary-price>span{font-size:13px;display:block;color:var(--muted)}
+.book-summary strong{float:none;display:block;font-size:30px;line-height:1.5;white-space:nowrap}
+.confirm-list{font-size:15px}
+.confirm-list>div{grid-template-columns:80px minmax(0,1fr)}
+.success .book-summary{text-align:left}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#toast{font-size:14px;white-space:normal;width:max-content}
+@media(max-width:1000px){
+ .hero{grid-template-columns:1fr 1fr}
+ .hero-copy{min-width:0}
+ .quiz-shell{padding:28px}
+ .menu-layout{gap:4%;grid-template-columns:1fr 1fr}
+ .selection-panel{padding:22px}
+}
+@media(max-width:700px){
+ .hero{grid-template-columns:1fr;padding-top:27px}
+ .hero h1{font-size:46px;line-height:1.48;margin:22px 0 12px}
+ .hero-en{position:static;transform:none;font-size:29px;line-height:1.12;margin:0 0 18px}
+ .hero-description{font-size:16px;line-height:1.85}
+ .hero-description br{display:none}
+ .hero-actions{display:grid;gap:8px;margin:20px 0 26px;justify-items:start}
+ .hero-diagnosis{width:100%;font-size:15px}
+ .hero .hero-menu-link{font-size:14px;min-height:44px;margin:0}
+ .hero-visual{width:94%}
+ .hero-caption{font-size:11px;gap:10px}
+ .hero-caption button{flex-shrink:0}
+ .section{padding-top:48px;padding-bottom:48px}
+ .concept{gap:28px;padding-top:52px;padding-bottom:48px}
+ .concept-copy{padding-left:6%}
+ .concept-copy p:not(.eyebrow){font-size:16px;line-height:1.9;margin-bottom:18px}
+ .concept-copy p:not(.eyebrow) br{display:none}
+ .concept-copy h2{font-size:29px;letter-spacing:.05em}
+ .styles,.staff-section{padding-top:28px}
+ .section-heading{margin-bottom:26px}
+ .section-heading h2{font-size:27px;letter-spacing:.02em}
+ .side-note{font-size:14px;margin-top:12px;line-height:1.9}
+ .eyebrow,.card-meta,.image-note,.swipe-hint{font-size:12px;letter-spacing:.09em}
+ .gallery-toolbar{gap:10px;align-items:flex-start;flex-wrap:wrap}
+ .tabs{gap:6px;flex-wrap:wrap}
+ .tabs button{font-size:14px;min-height:44px;padding:7px 15px}
+ .gallery-controls button{width:44px;height:44px}
+ .style-card p{font-size:15px;line-height:1.8}
+ .card-meta{font-size:11px;gap:10px;flex-wrap:wrap}
+ .diagnosis{padding-top:52px;padding-bottom:52px;gap:28px}
+ .diagnosis-head>p:not(.eyebrow){font-size:16px;line-height:1.9}
+ .diagnosis-head>p:not(.eyebrow) br{display:none}
+ .diagnosis-small{font-size:13px}
+ .quiz-shell{padding:24px;min-height:0}
+ .quiz-question{font-size:21px;padding-right:0}
+ .quiz-option{font-size:15px;min-height:52px;gap:10px}
+ .quiz-option>span:first-child{font-size:20px}
+ .quiz-option>span:last-child{margin-left:auto}
+ .quiz-result .photo{max-width:210px}
+ .quiz-result p{font-size:16px}
+ .quiz-result p.result-note{font-size:13px}
+ .quiz-footer,.quiz-restart{font-size:13px}
+ .menu-layout{grid-template-columns:1fr;gap:24px}
+ .menu-name{font-size:16px}
+ .menu-name small,.menu-cost small{font-size:12px}
+ .menu-cost{font-size:25px}
+ .menu-description{font-size:16px;line-height:1.9;padding-left:0}
+ .selection-panel{padding:24px}
+ .check-option{font-size:14px}
+ .check-option span{font-size:13px}
+ .selection-total span,.selection-panel>small{font-size:13px}
+ .selection-panel select,.field input,.field select{font-size:16px}
+ .staff-grid{gap:18px 14px}
+ .staff-label>span{font-size:11px}
+ .staff-label h3 span{font-size:12px;margin-left:5px}
+ .staff-grid article>p{font-size:13px;line-height:1.8}
+ .staff-grid .text-link{font-size:13px;gap:5px;min-height:44px}
+ .visit{gap:32px;padding:48px 7%}
+ .visit p:not(.eyebrow){font-size:16px;line-height:1.9}
+ .visit p:not(.eyebrow) br{display:none}
+ .visit-info>p{font-size:10px!important}
+ .visit-info small{font-size:13px}
+ .visit-info{padding-top:28px}
+ footer{padding-bottom:118px;gap:18px}
+ footer p,footer>a:last-child{font-size:12px}
+ .mobile-bar{gap:10px;padding-left:4%;padding-right:4%}
+ .mobile-bar>a,.mobile-bar>button{font-size:14px;min-height:48px;padding:10px 13px;gap:8px}
+ .detail-copy{padding:26px}
+ .detail-copy p:not(.eyebrow){font-size:16px}
+ .detail-copy small{font-size:13px}
+ .booking-dialog{padding:28px 22px}
+ .booking-dialog>.eyebrow{font-size:11px;letter-spacing:.1em;padding-right:34px}
+ .booking-demo,.book-note,.field,.time-caption,.booking-error{font-size:13px}
+ .booking-steps{gap:8px}
+ .booking-steps span{font-size:12px;line-height:1.6}
+ .booking-content-title{font-size:20px}
+ .staff-option{font-size:15px;padding:12px 5px}
+ .booking-customization{padding:14px 12px}
+ .book-summary{grid-template-columns:1fr;gap:12px;padding:16px}
+ .book-summary-price{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;text-align:left}
+ .book-summary strong{font-size:29px}
+ .book-summary-price>small{font-size:12px}
+ .book-summary-price>span{font-size:13px}
+ .booking-actions .button{font-size:15px;padding:13px 14px;min-height:50px}
+ .confirm-list{font-size:15px}
+ .confirm-list dt{font-size:13px}
+ .confirm-list>div{grid-template-columns:68px minmax(0,1fr)}
+ .success>p{font-size:16px}
+ .success>p.book-note{font-size:13px}
+ #toast{font-size:13px;bottom:90px;padding:12px 18px}
+}
+@media(max-width:360px){.staff-grid{grid-template-columns:1fr}.staff-grid article{max-width:100%}.gallery-toolbar{gap:12px}.booking-actions{flex-wrap:wrap}.booking-actions>button:first-child:not(:last-child){min-width:80px}.hero h1{font-size:42px}}

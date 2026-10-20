@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f3ed">
+  <meta name="description" content="Amiの世界観を体験する美容室Webサイト。ヘアスタイル、ヘアカラー診断、デモ予約を楽しめます。">
+  <title>Ami — 髪から、わたしらしく。</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="usability.css">
+  <link rel="stylesheet" href="atelier.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#" aria-label="Ami ホーム">Ami<span>HAIR & A LITTLE HAPPINESS</span></a>
+  <nav aria-label="メインナビゲーション"><a href="#concept">私たちのこと</a><a href="#styles">スタイル</a><a href="#menu">メニュー</a><a href="#staff">スタッフ</a></nav>
+  <button class="header-book" data-book>ご予約 <span>↗</span></button>
+</header>
+<main>
+<section class="hero" aria-labelledby="hero-title">
+ <div class="hero-copy">
+  <p class="eyebrow"><span class="line"></span> YOUR HAIR, YOUR OWN STORY</p>
+  <h1 id="hero-title">髪から、<br>わたしらしく。</h1>
+  <p class="hero-en">A little change.<br><em>A new you.</em></p>
+  <p class="hero-description">ふと鏡を見たとき、少しうれしくなる。<br>そんな毎日を、あなたの髪から。</p>
+  <div class="hero-actions" aria-label="サイトの楽しみ方"><a class="button hero-diagnosis" href="#diagnosis">似合うカラーを診断する <span aria-hidden="true">↗</span></a><a class="text-link hero-menu-link" href="#menu">メニュー・料金を見る <span aria-hidden="true">↓</span></a></div>
+ </div>
+ <div class="hero-visual">
+  <div class="hero-photo photo p0" role="img" aria-label="木と植物に囲まれたサロンで、ブラウンの髪を丁寧にカットする施術風景のイメージ"></div>
+  <div class="hero-sticker"><span>Find your</span><em>new mood.</em><span>HAIR SALON AMI</span></div>
+  <div class="hero-caption"><span>01 — SOFT CHESTNUT</span><button id="motion-toggle" aria-pressed="false" aria-label="写真の動きを停止">Ⅱ</button></div>
+ </div>
+ <div class="hero-bottom"><span>SCROLL TO DISCOVER <span class="down">↓</span></span><span>A space to be yourself.</span><span class="demo-pill">DEMO EXPERIENCE</span></div>
+</section>
+<div class="marquee" aria-hidden="true"><div>Find your own beauty. <span>✳</span> A little change, a new you. <span>✳</span> Find your own beauty. <span>✳</span> A little change, a new you. <span>✳</span></div></div>
+
+<section id="concept" class="concept section reveal">
+ <div class="concept-image"><div class="photo p3" role="img" aria-label="丸い鏡と木の家具がある、自然光の入るサロンのイメージ"></div><span class="image-note">A MOMENT JUST FOR YOU</span><div class="concept-snapshot snapshot-craft" aria-hidden="true"></div><div class="concept-snapshot snapshot-hair photo p2" aria-hidden="true"></div></div>
+ <div class="concept-copy"><p class="eyebrow">01 / OUR PHILOSOPHY</p><h2>飾りすぎない。<br>でも、心がときめく。</h2><p>好きな服を選ぶように、髪も自由に。<br>今の気分も、いつもの自分も、大切にしながら。<br>あなたにしっくりくるスタイルを、一緒に探す。</p><p>柔らかな光と、木のぬくもり。<br>ここで過ごす時間が、日常の小さなご褒美に。</p><span class="script">Just the way you are.</span></div>
+</section>
+
+<section id="styles" class="styles section reveal">
+ <div class="section-heading"><div><p class="eyebrow">02 / STYLE COLLECTION</p><h2>次のわたしに、出会う。</h2></div><p class="side-note">気になるスタイルをタップ。<br>新しい自分を、想像してみて。</p></div>
+ <div class="gallery-toolbar"><div class="tabs" id="style-filters" role="group" aria-label="ヘアスタイルの絞り込み"><button class="active" data-filter="all" aria-pressed="true">すべて</button><button data-filter="long" aria-pressed="false">ロング</button><button data-filter="bob" aria-pressed="false">ボブ</button></div><div class="gallery-controls"><button id="gallery-prev" aria-label="前のスタイル">←</button><button id="gallery-next" aria-label="次のスタイル">→</button></div></div>
+ <div class="style-gallery" id="style-gallery">
+  <button class="style-card" data-style="0" data-length="long"><div class="photo p0"><span class="photo-plus">↗</span></div><div class="card-meta"><span>01 / NATURAL</span><span>LONG</span></div><h3>Soft chestnut</h3><p>光にほどける、柔らかなブラウン。</p></button>
+  <button class="style-card" data-style="1" data-length="bob"><div class="photo p1"><span class="photo-plus">↗</span></div><div class="card-meta"><span>02 / EFFORTLESS</span><span>BOB</span></div><h3>Airy beige</h3><p>軽やかに、自分のペースで。</p></button>
+  <button class="style-card" data-style="2" data-length="long"><div class="photo p2"><span class="photo-plus">↗</span></div><div class="card-meta"><span>03 / ROMANTIC</span><span>LONG</span></div><h3>Rose brown</h3><p>さりげない甘さを、ひとさじ。</p></button>
+ </div><p class="swipe-hint">SWIPE TO EXPLORE <span>⟷</span></p>
+</section>
+
+<section id="diagnosis" class="diagnosis section reveal">
+ <div class="diagnosis-head"><p class="eyebrow">03 / FIND YOUR COLOR</p><h2 class="diagnosis-title">ヘアカラー診断</h2><p class="diagnosis-tagline">色が変わる。<em>気分が変わる。</em></p><div class="color-story" aria-label="診断で出会える3つのヘアカラーの参考写真"><figure class="color-print color-print-main"><div class="photo p0" role="img" aria-label="柔らかなチェスナットブラウンのロングヘア"></div><figcaption>Soft chestnut</figcaption></figure><figure class="color-print color-print-beige"><div class="photo p1" role="img" aria-label="透明感のあるエアリーベージュのボブ"></div><figcaption>Airy beige</figcaption></figure><figure class="color-print color-print-rose"><div class="photo p2" role="img" aria-label="華やかなローズブラウンのヘアスタイル"></div><figcaption>Rose brown</figcaption></figure><span class="color-story-note" aria-hidden="true">Find your<br><em>own color.</em></span></div><p class="diagnosis-intro">3つの質問から、今のあなたに似合う色を。<br>小さな冒険を、ここから始めてみませんか。</p><span class="diagnosis-small">約30秒 / 質問に基づくおすすめカラー提案</span></div>
+ <div class="quiz-shell" id="quiz-shell"><p class="quiz-section-label">ヘアカラー診断 <span>3 QUESTIONS</span></p><div class="quiz-decoration">Your<br><em>palette.</em></div><div id="quiz-content"></div></div>
+</section>
+
+<section id="menu" class="menu-section section reveal">
+ <div class="section-heading"><div><p class="eyebrow">04 / MENU & CARE</p><h2>あなたの「なりたい」に。</h2></div><p class="side-note">選ぶ時間も、心地よく。<br>メニューを選んで、ご予約へ。</p></div>
+ <div class="menu-layout"><div class="menu-list" id="menu-list"></div><aside class="selection-panel"><div id="selection-visual" class="selection-visual menu-image-0" aria-hidden="true"><span class="selection-visual-label">CUT + COLOR</span></div><span class="eyebrow">YOUR SELECTION</span><h3 id="selected-menu-title">カット ＋ カラー</h3><label for="hair-length">髪の長さ</label><select id="hair-length"><option value="0">ショート・ボブ（追加なし）</option><option value="1100">ミディアム（＋¥1,100）</option><option value="2200">ロング（＋¥2,200）</option></select><label class="check-option"><input type="checkbox" id="treatment"> 集中トリートメント <span>＋¥3,300</span></label><div class="selection-total"><div><span>税込合計</span><strong id="total-price">¥12,100</strong></div><span id="total-time">約120分</span></div><button class="button dark" id="menu-book">このメニューで予約する <span>↗</span></button><small>表示料金・施術時間はすべてデモ用の仮設定です。</small></aside></div>
+</section>
+
+<section id="staff" class="staff-section section reveal">
+ <div class="section-heading"><div><p class="eyebrow">05 / PEOPLE AT AMI</p><h2>あなたの話を、聞かせて。</h2></div><p class="side-note">好きなものも、小さなお悩みも。<br>一緒に、あなたらしいスタイルへ。</p></div>
+ <div class="staff-grid"><article><button class="staff-image photo p4" data-staff="0" aria-label="スタイリスト Aoiのプロフィールを見る"><span class="photo-plus">＋</span></button><div class="staff-label"><h3>Aoi <span>アオイ</span></h3><span>STYLIST</span></div><p>柔らかなカラー / 顔まわりのデザイン</p><button class="text-link" data-staff="0">プロフィールを見る <span>↗</span></button></article><article><button class="staff-image photo p5" data-staff="1" aria-label="スタイリスト Renのプロフィールを見る"><span class="photo-plus">＋</span></button><div class="staff-label"><h3>Ren <span>レン</span></h3><span>STYLIST</span></div><p>ナチュラルなボブ / 扱いやすいカット</p><button class="text-link" data-staff="1">プロフィールを見る <span>↗</span></button></article><div class="staff-message"><span class="asterisk">✳</span><h3>Good hair.<br><em>Good day.</em></h3><p>髪が整うと、<br>いつもの日がちょっと好きになる。</p><small>スタッフ名・プロフィール・写真は<br>デモ用の架空の設定です。</small></div></div>
+</section>
+
+<section class="visit section reveal" id="visit"><div><p class="eyebrow">06 / YOUR NEXT LITTLE CHANGE</p><h2>次のときめきを、<br>予約しよう。</h2><p>どんなスタイルにするか、迷っていても大丈夫。<br>まずは、あなたの気分を聞かせてください。</p><button class="button light" data-book>空き状況を見てみる <span>↗</span></button></div><div class="visit-info"><span class="visit-logo">Ami</span><p>HAIR & A LITTLE HAPPINESS</p><dl><dt>OPEN</dt><dd>10:00 – 19:00 / 火曜定休</dd><dt>ACCESS</dt><dd>表参道駅 徒歩5分（仮設定）</dd></dl><small>このサイトはデザイン体験用のデモです。<br>実在店舗の営業情報ではありません。</small></div></section>
+</main>
+<footer><a class="brand" href="#">Ami</a><p>© Ami Hair Salon — Concept website</p><p>写真はすべてAI生成のイメージです。予約・決済は発生しません。</p><a href="#">BACK TO TOP ↑</a></footer>
+<div class="mobile-bar"><a href="#diagnosis">カラー診断 <span>✳</span></a><button data-book>デモ予約する <span>↗</span></button></div>
+
+<dialog id="detail-dialog" class="detail-dialog"><button class="close-dialog" data-close aria-label="閉じる">×</button><div id="detail-content"></div></dialog>
+<dialog id="booking-dialog" class="booking-dialog" aria-labelledby="booking-title"><button class="close-dialog" data-close aria-label="予約画面を閉じる">×</button><p class="eyebrow">A LITTLE CHANGE STARTS HERE</p><h2 id="booking-title">ご予約</h2><p class="booking-demo">デモ予約 / 実際の予約・送信・請求は発生しません。</p><div id="booking-progress"></div><div id="booking-content"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body></html>

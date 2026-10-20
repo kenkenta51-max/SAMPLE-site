@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="動物の声と小さな物語を楽しむ、3〜8歳向けの架空の知育コミュニケーション玩具『コエトモリ おしゃべりパレット』。">
+  <meta name="theme-color" content="#F23878">
+  <title>コエトモリ｜おすたび、せかいが しゃべりだす。</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    :root {
+      --cream: #fff3d6;
+      --pink: #f23878;
+      --yellow: #ffd43b;
+      --sky: #43c4e8;
+      --red: #f0544f;
+      --green: #31b86b;
+      --purple: #8c5bc4;
+      --ink: #181818;
+      --white: #fff;
+      --stroke: 5px;
+      --radius-sm: 18px;
+      --radius-card: 32px;
+      --radius-panel: 48px;
+      --shadow-sm: 4px 4px 0 var(--ink);
+      --shadow-md: 7px 7px 0 var(--ink);
+      --shadow-lg: 10px 10px 0 var(--ink);
+      --content: 1200px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: clip; }
+    body {
+      margin: 0;
+      overflow-x: clip;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: "Arial Rounded MT Bold", "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    body, button, a { -webkit-tap-highlight-color: transparent; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { line-height: 1.12; letter-spacing: .02em; }
+    section { position: relative; isolation: isolate; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      padding: 12px 18px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 999px;
+      background: var(--yellow);
+      transition: none;
+    }
+    .skip-link:focus {
+      top: 10px;
+      left: 10px;
+      width: auto;
+      height: auto;
+      overflow: hidden;
+      clip-path: none;
+    }
+
+    :focus-visible {
+      outline: 4px solid var(--white);
+      outline-offset: 4px;
+      box-shadow: 0 0 0 8px var(--ink);
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--content));
+      margin-inline: auto;
+    }
+    .section-pad { padding: clamp(76px, 10vw, 144px) 0; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      margin-bottom: 18px;
+      padding: 4px 16px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 999px;
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .section-title {
+      max-width: 900px;
+      margin-bottom: 24px;
+      font-size: clamp(2.25rem, 6vw, 4.75rem);
+      font-weight: 900;
+    }
+    .section-lead {
+      max-width: 720px;
+      margin-bottom: 42px;
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      font-weight: 700;
+    }
+    .center { text-align: center; }
+    .center .section-title, .center .section-lead { margin-inline: auto; }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      min-height: 56px;
+      padding: 12px 24px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 999px;
+      background: var(--yellow);
+      box-shadow: var(--shadow-md);
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.2;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 9px 10px 0 var(--ink); }
+    .btn:active { transform: translate(5px, 5px); box-shadow: 2px 2px 0 var(--ink); }
+    .btn--cream { background: var(--cream); }
+    .btn--pink { background: var(--pink); color: var(--white); }
+    .btn--green { background: var(--green); }
+    .btn--small { min-width: auto; min-height: 48px; padding: 9px 18px; box-shadow: var(--shadow-sm); }
+
+    .site-header {
+      position: relative;
+      z-index: 100;
+      top: 0;
+      min-height: 72px;
+      border-bottom: var(--stroke) solid var(--ink);
+      background: rgba(255, 243, 214, .96);
+    }
+    .header-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      color: var(--ink);
+      font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+      font-weight: 900;
+      text-decoration: none;
+      letter-spacing: .04em;
+    }
+    .brand-mark { width: 46px; height: 40px; flex: 0 0 auto; }
+    .nav-wrap { display: flex; align-items: center; gap: 18px; }
+    .nav-list { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .nav-list a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .94rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .nav-list a:hover { background: var(--yellow); }
+
+    .hero {
+      min-height: min(900px, calc(100svh - 72px));
+      padding: clamp(60px, 8vw, 110px) 0 105px;
+      background-color: var(--pink);
+      background-image: radial-gradient(var(--ink) 2px, transparent 2px);
+      background-size: 28px 28px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(380px, .88fr);
+      align-items: center;
+      gap: clamp(38px, 7vw, 90px);
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      margin-bottom: 22px;
+      padding: 5px 18px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 999px;
+      background: var(--cream);
+      box-shadow: var(--shadow-sm);
+      font-weight: 900;
+    }
+    .hero h1 {
+      max-width: 780px;
+      margin-bottom: 24px;
+      color: var(--yellow);
+      font-size: clamp(3rem, 8.4vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      text-shadow:
+        -3px -3px 0 var(--ink), 3px -3px 0 var(--ink),
+        -3px 3px 0 var(--ink), 3px 3px 0 var(--ink),
+        7px 8px 0 var(--cream), 11px 12px 0 var(--ink);
+    }
+    .hero-copy {
+      max-width: 650px;
+      margin-bottom: 30px;
+      color: var(--white);
+      font-size: clamp(1.05rem, 2vw, 1.32rem);
+      font-weight: 800;
+      text-shadow: 2px 2px 0 var(--ink);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .meta-chip {
+      padding: 5px 13px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--cream);
+      font-size: .9rem;
+      font-weight: 900;
+    }
+    .hero-visual { position: relative; min-height: 560px; }
+    .product-stage {
+      position: absolute;
+      inset: 11% 2% auto 2%;
+      padding: 20px 10px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 46% 54% 46% 54% / 48% 43% 57% 52%;
+      background: var(--cream);
+      box-shadow: var(--shadow-lg);
+      animation: product-rock 8s ease-in-out infinite;
+    }
+    .product-stage svg { width: 100%; }
+    .hero-animal {
+      position: absolute;
+      width: clamp(108px, 13vw, 158px);
+      filter: drop-shadow(6px 7px 0 var(--ink));
+    }
+    .hero-animal--lion { left: -2%; bottom: 1%; animation: float 5.3s ease-in-out infinite; }
+    .hero-animal--penguin { right: 0; bottom: -2%; animation: float 6.4s .4s ease-in-out infinite; }
+    .hero-animal--elephant { left: 2%; top: 0; animation: float 6.8s .8s ease-in-out infinite; }
+    .hero-animal--giraffe { right: -2%; top: -4%; animation: float 5.8s .2s ease-in-out infinite; }
+    .float-deco {
+      position: absolute;
+      z-index: -1;
+      width: 46px;
+      height: 46px;
+      color: var(--yellow);
+      animation: slow-spin 10s linear infinite;
+    }
+    .float-deco.one { top: 8%; left: -8%; }
+    .float-deco.two { right: -4%; bottom: 20%; color: var(--sky); animation-direction: reverse; }
+
+    .section-divider {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 82px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .section-divider path { vector-effect: non-scaling-stroke; }
+
+    .marquee {
+      overflow: hidden;
+      border-block: var(--stroke) solid var(--ink);
+      background: var(--yellow);
+      padding: 18px 0 30px;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+      will-change: transform;
+    }
+    .marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+    .marquee-group { display: flex; align-items: center; flex-shrink: 0; }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      padding-inline: 26px;
+      font-size: clamp(1.65rem, 4vw, 3.4rem);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .marquee-dot {
+      width: 22px;
+      height: 22px;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+      background: var(--pink);
+    }
+
+    .concept {
+      padding-top: clamp(92px, 12vw, 160px);
+      background-color: var(--cream);
+      background-image: radial-gradient(rgba(24, 24, 24, .12) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    .story-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(22px, 4vw, 48px);
+      margin-top: 54px;
+    }
+    .story-step {
+      position: relative;
+      min-height: 270px;
+      padding: 38px 26px 30px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .story-step:nth-child(2) { background: var(--yellow); transform: rotate(-2deg); }
+    .story-step:nth-child(3) { background: var(--green); transform: rotate(2deg); }
+    .step-no {
+      display: grid;
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 18px;
+      place-items: center;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+    .story-step h3 { margin-bottom: 10px; font-size: clamp(1.55rem, 3vw, 2.35rem); }
+    .story-step p { margin-bottom: 0; font-weight: 700; }
+
+    .characters { background: var(--sky); }
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(24px, 4vw, 44px);
+    }
+    .character-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(160px, .7fr) 1fr;
+      align-items: center;
+      gap: 20px;
+      min-height: 320px;
+      padding: clamp(22px, 4vw, 36px);
+      border: var(--stroke) solid var(--ink);
+      border-radius: var(--radius-card);
+      background: var(--cream);
+      box-shadow: var(--shadow-md);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .character-card:hover, .character-card:focus-within {
+      transform: translateY(-6px) rotate(2deg);
+      box-shadow: 11px 13px 0 var(--ink);
+    }
+    .character-card:nth-child(even):hover, .character-card:nth-child(even):focus-within { transform: translateY(-6px) rotate(-2deg); }
+    .animal-art { width: 100%; max-height: 235px; }
+    .character-name { margin-bottom: 4px; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; }
+    .character-role {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 3px 11px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--yellow);
+      font-weight: 900;
+    }
+    .character-card p { margin-bottom: 0; font-weight: 700; }
+
+    .features {
+      background-color: var(--cream);
+      background-image: radial-gradient(rgba(49, 184, 107, .22) 2px, transparent 2px);
+      background-size: 26px 26px;
+    }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .feature-card {
+      min-height: 390px;
+      padding: 34px 28px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: var(--radius-card);
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .feature-card:nth-child(2) { background: var(--yellow); transform: translateY(18px); }
+    .feature-card:nth-child(3) { background: var(--green); }
+    .feature-card:hover, .feature-card:focus-within { transform: translateY(-6px) rotate(2deg); box-shadow: 11px 13px 0 var(--ink); }
+    .feature-card:nth-child(2):hover, .feature-card:nth-child(2):focus-within { transform: translateY(12px) rotate(-2deg); }
+    .feature-icon {
+      width: 112px;
+      height: 112px;
+      margin-bottom: 28px;
+      padding: 16px;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 50%;
+      background: var(--pink);
+    }
+    .feature-card h3 { font-size: clamp(1.65rem, 3vw, 2.35rem); }
+    .feature-card p { margin-bottom: 0; font-weight: 700; }
+
+    .colors { background: var(--purple); color: var(--white); }
+    .colors .eyebrow, .colors .color-name { color: var(--ink); }
+    .color-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(320px, 1.05fr);
+      align-items: center;
+      gap: clamp(34px, 7vw, 90px);
+    }
+    .color-stage {
+      position: relative;
+      padding: clamp(24px, 5vw, 54px);
+      border: var(--stroke) solid var(--ink);
+      border-radius: 50% 50% 36px 36px;
+      background: var(--cream);
+      box-shadow: var(--shadow-lg);
+      color: var(--ink);
+    }
+    .color-product { width: 100%; transition: transform .24s ease; }
+    .color-product.is-changing { transform: scale(.96) rotate(-1deg); }
+    .color-name {
+      margin: 18px 0 0;
+      text-align: center;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-weight: 900;
+    }
+    .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .swatch {
+      display: grid;
+      min-height: 92px;
+      padding: 10px;
+      place-items: center;
+      border: var(--stroke) solid var(--ink);
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      box-shadow: var(--shadow-sm);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .swatch:hover { transform: translateY(-4px); box-shadow: 7px 8px 0 var(--ink); }
+    .swatch:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+    .swatch[aria-pressed="true"] { background: var(--yellow); transform: translateY(-4px); box-shadow: 7px 8px 0 var(--ink); }
+    .swatch-dot { width: 38px; height: 38px; border: 4px solid var(--ink); border-radius: 50%; background: var(--swatch); }
+    .swatch-label { font-size: .82rem; font-weight: 900; line-height: 1.25; }
+
+    .price { background: var(--yellow); }
+    .price-panel {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .75fr);
+      align-items: center;
+      gap: 42px;
+      padding: clamp(28px, 6vw, 66px);
+      border: var(--stroke) solid var(--ink);
+      border-radius: var(--radius-panel);
+      background: var(--cream);
+      box-shadow: var(--shadow-lg);
+    }
+    .price-panel h2 { margin-bottom: 16px; font-size: clamp(2.2rem, 4.2vw, 3.8rem); letter-spacing: -.02em; }
+    .product-name { white-space: nowrap; }
+    .price-number { margin: 10px 0 24px; font-size: clamp(2.8rem, 7vw, 6rem); font-weight: 900; line-height: 1; }
+    .price-number small { font-size: .25em; }
+    .spec-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 30px; padding: 0; list-style: none; }
+    .spec-list li {
+      padding: 8px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--white);
+      font-size: .92rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .price-art { position: relative; }
+    .price-art::before {
+      content: "";
+      position: absolute;
+      inset: 8% 4%;
+      z-index: -1;
+      border: var(--stroke) solid var(--ink);
+      border-radius: 50%;
+      background: var(--sky);
+      transform: rotate(-4deg);
+    }
+
+    .final-cta {
+      overflow: hidden;
+      padding-bottom: 170px;
+      background-color: var(--green);
+      background-image: radial-gradient(rgba(24, 24, 24, .16) 2px, transparent 2px);
+      background-size: 30px 30px;
+    }
+    .cta-panel {
+      position: relative;
+      max-width: 960px;
+      margin-inline: auto;
+      padding: clamp(38px, 7vw, 72px) clamp(22px, 6vw, 72px);
+      border: var(--stroke) solid var(--ink);
+      border-radius: 50% 50% var(--radius-panel) var(--radius-panel) / 22% 22% var(--radius-panel) var(--radius-panel);
+      background: var(--cream);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .cta-panel h2 { margin-bottom: 18px; font-size: clamp(2.5rem, 6vw, 5.25rem); }
+    .cta-panel p { max-width: 680px; margin: 0 auto 28px; font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 700; }
+    .cta-price { display: block; margin: 0 0 16px; font-size: 1.3rem; font-weight: 900; }
+    .cta-bounce { animation: cta-bounce 7s ease-in-out infinite; }
+    .cta-bounce:hover, .cta-bounce:focus-visible { animation-play-state: paused; }
+    .cta-animals {
+      position: absolute;
+      left: 50%;
+      bottom: -145px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: min(900px, 110vw);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .cta-animals svg { width: 24%; max-width: 170px; margin-inline: -5px; filter: drop-shadow(5px 6px 0 var(--ink)); }
+    .demo-note { min-height: 28px; margin-top: 20px !important; margin-bottom: 0 !important; }
+
+    .site-footer {
+      padding: 74px 0 36px;
+      background: var(--ink);
+      color: var(--white);
+    }
+    .footer-grid { display: grid; grid-template-columns: 1.25fr 2fr; gap: 52px; }
+    .footer-brand { color: var(--yellow); font-size: 2rem; font-weight: 900; }
+    .footer-copy { max-width: 420px; }
+    .footer-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; margin: 0; padding: 0; list-style: none; }
+    .footer-links a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; text-underline-offset: 5px; }
+    .footer-bottom { margin-top: 46px; padding-top: 24px; border-top: 3px solid var(--cream); font-size: .88rem; }
+
+    .js .reveal { opacity: 0; transform: translateY(30px); }
+    .js .reveal.is-visible { opacity: 1; transform: none; transition: opacity .5s ease, transform .5s ease; }
+    .js .stagger > * { opacity: 0; transform: translateY(30px); }
+    .js .stagger.is-visible > * { opacity: 1; transform: none; transition: opacity .48s ease, transform .48s ease; }
+    .js .stagger.is-visible > *:nth-child(2) { transition-delay: .09s; }
+    .js .stagger.is-visible > *:nth-child(3) { transition-delay: .18s; }
+    .js .stagger.is-visible > *:nth-child(4) { transition-delay: .27s; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    @keyframes product-rock {
+      0%, 62%, 100% { transform: rotate(0); }
+      70% { transform: rotate(-2.5deg); }
+      78% { transform: rotate(2.5deg); }
+      86% { transform: rotate(-1.5deg); }
+      94% { transform: rotate(0); }
+    }
+    @keyframes slow-spin { 0%, 85% { transform: rotate(0); } 94% { transform: rotate(12deg); } 100% { transform: rotate(0); } }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    @keyframes cta-bounce {
+      0%, 74%, 100% { transform: translateY(0); }
+      80% { transform: translateY(-7px); }
+      86% { transform: translateY(0); }
+      91% { transform: translateY(-3px); }
+    }
+
+    @media (max-width: 980px) {
+      .nav-list { display: none; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-copy-wrap { text-align: center; }
+      .hero-kicker, .hero-actions, .hero-meta { justify-content: center; }
+      .hero-copy, .hero h1 { margin-inline: auto; }
+      .hero-visual { width: min(650px, 100%); min-height: 570px; margin-inline: auto; }
+      .character-card { grid-template-columns: 1fr; text-align: center; }
+      .animal-art { width: min(240px, 78%); margin-inline: auto; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card, .feature-card:nth-child(2) { min-height: auto; transform: none; }
+      .feature-card:hover, .feature-card:nth-child(2):hover, .feature-card:focus-within, .feature-card:nth-child(2):focus-within { transform: translateY(-6px) rotate(1deg); }
+      .color-layout, .price-panel { grid-template-columns: 1fr; }
+      .price-art { width: min(520px, 100%); margin-inline: auto; }
+    }
+
+    @media (max-width: 700px) {
+      :root { --shadow-lg: 7px 7px 0 var(--ink); }
+      .container { width: min(calc(100% - 24px), var(--content)); }
+      .site-header, .header-inner { min-height: 66px; }
+      .brand-mark { width: 40px; height: 36px; }
+      .header-buy { padding-inline: 14px; font-size: .85rem; }
+      .hero { min-height: auto; padding-top: 48px; }
+      .hero h1 {
+        font-size: clamp(2.65rem, 15vw, 4.5rem);
+        text-shadow:
+          -2px -2px 0 var(--ink), 2px -2px 0 var(--ink),
+          -2px 2px 0 var(--ink), 2px 2px 0 var(--ink),
+          4px 5px 0 var(--cream), 7px 8px 0 var(--ink);
+      }
+      .hero-actions .btn { width: 100%; }
+      .hero-visual { min-height: 440px; }
+      .product-stage { top: 15%; }
+      .hero-animal { width: 100px; }
+      .hero-animal--elephant { top: 2%; }
+      .hero-animal--giraffe { top: 0; }
+      .section-divider { height: 56px; }
+      .story-steps, .character-grid { grid-template-columns: 1fr; }
+      .story-step { min-height: 245px; padding: 34px 22px; }
+      .story-step:nth-child(2), .story-step:nth-child(3) { transform: none; }
+      .character-card { min-height: 0; }
+      .swatches { grid-template-columns: repeat(2, 1fr); }
+      .swatch { min-height: 86px; }
+      .spec-list { grid-template-columns: 1fr; }
+      .price-panel h2 { font-size: 1.9rem; }
+      .product-name { white-space: nowrap; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .cta-panel { border-radius: 72px 72px 32px 32px / 40px 40px 32px 32px; }
+      .cta-animals { bottom: -116px; width: 125vw; }
+      .final-cta { padding-bottom: 138px; }
+    }
+
+    @media (max-width: 390px) {
+      .brand { gap: 6px; font-size: 1.02rem; letter-spacing: 0; }
+      .brand-mark { width: 36px; }
+      .header-buy { min-height: 44px; padding: 7px 11px; font-size: .78rem; }
+      .hero-kicker { font-size: .85rem; }
+      .hero-visual { min-height: 405px; }
+      .hero-animal { width: 88px; }
+      .marquee-item { padding-inline: 18px; }
+      .character-card, .feature-card { padding: 24px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      .marquee-track { animation: none !important; transform: none !important; }
+      .marquee-group[aria-hidden="true"] { display: none; }
+      .marquee { overflow-x: auto; }
+      .product-stage, .hero-animal, .float-deco, .cta-bounce { animation: none !important; }
+      .js .reveal, .js .stagger > * { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+
+  <svg class="sr-only" aria-hidden="true" width="0" height="0">
+    <defs>
+      <symbol id="brand-mark" viewBox="0 0 64 56">
+        <path d="M7 9h34a14 14 0 0 1 14 14v5a14 14 0 0 1-14 14H26L14 51l2-9H7A14 14 0 0 1-7 28v-5A14 14 0 0 1 7 9Z" transform="translate(7)" fill="#43c4e8" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="26" cy="25" r="4" fill="#181818"/>
+        <circle cx="40" cy="25" r="4" fill="#181818"/>
+        <path d="M27 34c4 3 8 3 12 0" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <path d="M49 8c7-8 13-3 9 4-3 5-9 7-13 6 0-4 1-7 4-10Z" fill="#31b86b" stroke="#181818" stroke-width="4" stroke-linejoin="round"/>
+      </symbol>
+
+      <symbol id="product" viewBox="0 0 520 420">
+        <path d="M158 116V88c0-34 27-61 61-61h82c34 0 61 27 61 61v28" fill="none" stroke="#181818" stroke-width="18" stroke-linecap="round"/>
+        <path d="M160 116V87c0-32 26-58 58-58h84c32 0 58 26 58 58v29" fill="none" stroke="#fff3d6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M107 91h306c35 0 60 20 67 54l29 151c8 43-24 82-68 82H79c-44 0-76-39-68-82l29-151c7-34 32-54 67-54Z" fill="var(--product-color, #f23878)" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M86 127h348c18 0 31 10 35 28l23 125c5 26-14 50-41 50H69c-27 0-46-24-41-50l23-125c4-18 17-28 35-28Z" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+        <path d="M92 144h336" stroke="#181818" stroke-width="5" stroke-linecap="round" opacity=".35"/>
+        <circle cx="128" cy="213" r="48" fill="#ffd43b" stroke="#181818" stroke-width="5"/>
+        <path d="M107 221c13-21 31-21 43 0" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="117" cy="202" r="4" fill="#181818"/><circle cx="139" cy="202" r="4" fill="#181818"/>
+        <path d="M210 168c34-17 67 10 56 44-9 29-56 60-56 60s-47-31-56-60c-11-34 22-61 56-44Z" fill="#43c4e8" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="197" cy="207" r="4" fill="#181818"/><circle cx="223" cy="207" r="4" fill="#181818"/>
+        <path d="M197 221c8 6 17 6 25 0" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <rect x="284" y="164" width="96" height="96" rx="28" fill="#31b86b" stroke="#181818" stroke-width="5" transform="rotate(4 332 212)"/>
+        <circle cx="320" cy="206" r="4" fill="#181818"/><circle cx="344" cy="206" r="4" fill="#181818"/>
+        <path d="M320 224h25" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <path d="M422 170c34 0 57 27 48 58-8 25-29 48-48 62-19-14-40-37-48-62-9-31 14-58 48-58Z" fill="#8c5bc4" stroke="#181818" stroke-width="5"/>
+        <circle cx="410" cy="215" r="4" fill="#181818"/><circle cx="434" cy="215" r="4" fill="#181818"/>
+        <path d="M410 232c8 5 16 5 24 0" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <path d="M170 303c15-12 27-12 42 0m18 0c15-12 27-12 42 0m18 0c15-12 27-12 42 0" fill="none" stroke="#181818" stroke-width="8" stroke-linecap="round"/>
+        <path d="M78 379v16m364-16v16" stroke="#181818" stroke-width="15" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="lion" viewBox="0 0 240 240">
+        <circle cx="120" cy="48" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="75" cy="66" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="165" cy="66" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="62" cy="112" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="178" cy="112" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="84" cy="151" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <circle cx="156" cy="151" r="31" fill="#f0544f" stroke="#181818" stroke-width="5"/>
+        <path d="M76 118c0-43 19-69 44-69s44 26 44 69c0 42-19 70-44 70s-44-28-44-70Z" fill="#ffd43b" stroke="#181818" stroke-width="5"/>
+        <circle cx="103" cy="108" r="5" fill="#181818"/><circle cx="137" cy="108" r="5" fill="#181818"/>
+        <path d="M112 126h16l-8 9Z" fill="#f23878" stroke="#181818" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M120 136c-5 12-18 12-22 3m22-3c5 12 18 12 22 3" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <path d="M78 167c18-18 66-18 84 0l12 53H66Z" fill="#43c4e8" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M77 190 49 177m114 13 28-13" stroke="#181818" stroke-width="16" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="penguin" viewBox="0 0 240 240">
+        <path d="M66 88c0-44 23-72 54-72s54 28 54 72v77c0 42-22 67-54 67s-54-25-54-67Z" fill="#8c5bc4" stroke="#181818" stroke-width="5"/>
+        <path d="M89 86c0-25 13-42 31-42s31 17 31 42v76c0 29-13 47-31 47s-31-18-31-47Z" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+        <path d="m116 96 20 11-20 12-19-12Z" fill="#ffd43b" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="103" cy="79" r="5" fill="#181818"/><circle cx="138" cy="79" r="5" fill="#181818"/>
+        <path d="M72 112 34 148l40 12m94-58 38 47-37 6" fill="#43c4e8" stroke="#181818" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m88 220 26-13m38 13-26-13" stroke="#181818" stroke-width="12" stroke-linecap="round"/>
+        <path d="M57 46c14-14 26-19 38-21" fill="none" stroke="#43c4e8" stroke-width="10" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="elephant" viewBox="0 0 240 240">
+        <circle cx="70" cy="96" r="47" fill="#31b86b" stroke="#181818" stroke-width="5"/>
+        <circle cx="170" cy="96" r="47" fill="#31b86b" stroke="#181818" stroke-width="5"/>
+        <path d="M69 93c0-46 21-73 51-73s51 27 51 73v41c0 26-11 46-30 56l-4 24c-3 18-34 19-34-3 0-17 19-23 19-38" fill="#f0544f" stroke="#181818" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="102" cy="88" r="5" fill="#181818"/><circle cx="142" cy="88" r="5" fill="#181818"/>
+        <path d="M105 111c9 7 20 7 29 0" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+        <path d="M75 166c22-17 68-17 90 0l14 55H61Z" fill="#ffd43b" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="92" cy="188" r="8" fill="#8c5bc4" stroke="#181818" stroke-width="4"/>
+        <circle cx="146" cy="196" r="8" fill="#8c5bc4" stroke="#181818" stroke-width="4"/>
+      </symbol>
+
+      <symbol id="giraffe" viewBox="0 0 240 240">
+        <path d="M89 24v25m62-25v25" stroke="#181818" stroke-width="13" stroke-linecap="round"/>
+        <circle cx="89" cy="20" r="12" fill="#43c4e8" stroke="#181818" stroke-width="5"/>
+        <circle cx="151" cy="20" r="12" fill="#43c4e8" stroke="#181818" stroke-width="5"/>
+        <path d="M78 53c0-23 19-36 42-36s42 13 42 36v43c0 18-8 30-19 38v83h-46v-83c-11-8-19-20-19-38Z" fill="#8c5bc4" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M61 64 88 78M179 64l-27 14" stroke="#181818" stroke-width="17" stroke-linecap="round"/>
+        <circle cx="103" cy="75" r="5" fill="#181818"/><circle cx="139" cy="75" r="5" fill="#181818"/>
+        <path d="M102 99h36c-3 23-33 23-36 0Z" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+        <path d="M88 168c20-13 44-13 64 0l18 53H70Z" fill="#31b86b" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="112" cy="148" r="8" fill="#ffd43b" stroke="#181818" stroke-width="4"/>
+        <rect x="123" y="174" width="18" height="18" rx="5" fill="#ffd43b" stroke="#181818" stroke-width="4" transform="rotate(11 132 183)"/>
+        <circle cx="94" cy="198" r="8" fill="#ffd43b" stroke="#181818" stroke-width="4"/>
+      </symbol>
+
+      <symbol id="icon-voice" viewBox="0 0 100 100">
+        <path d="M20 42h18l20-17v50L38 58H20Z" fill="#fff3d6" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M70 38c9 7 9 17 0 24m10-34c18 14 18 30 0 44" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-grow" viewBox="0 0 100 100">
+        <circle cx="32" cy="69" r="15" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+        <circle cx="70" cy="43" r="24" fill="#ffd43b" stroke="#181818" stroke-width="5"/>
+        <path d="M39 60 54 50m9 0 7-7 7 7" fill="none" stroke="#181818" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-screen" viewBox="0 0 100 100">
+        <rect x="18" y="20" width="64" height="53" rx="12" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+        <path d="M40 84h20M23 18l56 64" stroke="#181818" stroke-width="7" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="star" viewBox="0 0 64 64">
+        <path d="m32 5 8 18 19 2-14 13 4 19-17-10-17 10 4-19L5 25l19-2Z" fill="currentColor" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="flower" viewBox="0 0 64 64">
+        <circle cx="32" cy="14" r="12" fill="currentColor" stroke="#181818" stroke-width="5"/>
+        <circle cx="49" cy="28" r="12" fill="currentColor" stroke="#181818" stroke-width="5"/>
+        <circle cx="43" cy="49" r="12" fill="currentColor" stroke="#181818" stroke-width="5"/>
+        <circle cx="21" cy="49" r="12" fill="currentColor" stroke="#181818" stroke-width="5"/>
+        <circle cx="15" cy="28" r="12" fill="currentColor" stroke="#181818" stroke-width="5"/>
+        <circle cx="32" cy="32" r="9" fill="#ffd43b" stroke="#181818" stroke-width="4"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="コエトモリ トップへ">
+        <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"></use></svg>
+        <span>コエトモリ</span>
+      </a>
+      <div class="nav-wrap">
+        <nav aria-label="メインナビゲーション">
+          <ul class="nav-list">
+            <li><a href="#concept">どんなおもちゃ？</a></li>
+            <li><a href="#friends">なかまたち</a></li>
+            <li><a href="#features">3つの特徴</a></li>
+            <li><a href="#colors">カラー</a></li>
+          </ul>
+        </nav>
+        <a class="btn btn--pink btn--small header-buy" href="#purchase">購入する</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy-wrap reveal">
+          <p class="hero-kicker">3〜8歳の「なんで？」に</p>
+          <h1 id="hero-title">おすたび、<br>せかいが<br>しゃべりだす。</h1>
+          <p class="hero-copy">動物の声と小さな物語が、ことば・想像力・親子の会話を育てる、スクリーン不要のおしゃべり玩具です。</p>
+          <div class="hero-actions">
+            <a class="btn" href="#concept">コエトモリを見てみる</a>
+            <a class="btn btn--cream" href="#features">遊び方を知る</a>
+          </div>
+          <div class="hero-meta" aria-label="商品の主な情報">
+            <span class="meta-chip">対象年齢 3〜8歳</span>
+            <span class="meta-chip">画面・通信不要</span>
+            <span class="meta-chip">3つの遊びモード</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="コエトモリの商品と4匹の動物たち">
+          <svg class="float-deco one" aria-hidden="true"><use href="#star"></use></svg>
+          <svg class="float-deco two" aria-hidden="true"><use href="#flower"></use></svg>
+          <div class="product-stage">
+            <svg viewBox="0 0 520 420" role="img" aria-labelledby="hero-product-title hero-product-desc" style="--product-color:#43c4e8">
+              <title id="hero-product-title">コエトモリ おしゃべりパレット</title>
+              <desc id="hero-product-desc">丸い六角形の本体に、形の異なる4つの動物ボタンが並ぶ架空の知育玩具です。</desc>
+              <use href="#product"></use>
+            </svg>
+          </div>
+          <svg class="hero-animal hero-animal--lion" viewBox="0 0 240 240" role="img" aria-label="丸いたてがみのライオン、ラオン"><use href="#lion"></use></svg>
+          <svg class="hero-animal hero-animal--penguin" viewBox="0 0 240 240" role="img" aria-label="アーチ形の体をしたペンギン、ペトリ"><use href="#penguin"></use></svg>
+          <svg class="hero-animal hero-animal--elephant" viewBox="0 0 240 240" role="img" aria-label="疑問符のような鼻を持つゾウ、モルゾ"><use href="#elephant"></use></svg>
+          <svg class="hero-animal hero-animal--giraffe" viewBox="0 0 240 240" role="img" aria-label="カプセル形の首を持つキリン、キラフ"><use href="#giraffe"></use></svg>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 45Q150 0 300 45T600 45T900 45T1200 45V82H0Z" fill="#ffd43b" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <section class="marquee" aria-label="声の森の動物たち">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span class="marquee-item">ラオン<span class="marquee-dot"></span></span>
+          <span class="marquee-item">ペトリ<span class="marquee-dot"></span></span>
+          <span class="marquee-item">モルゾ<span class="marquee-dot"></span></span>
+          <span class="marquee-item">キラフ<span class="marquee-dot"></span></span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span class="marquee-item">ラオン<span class="marquee-dot"></span></span>
+          <span class="marquee-item">ペトリ<span class="marquee-dot"></span></span>
+          <span class="marquee-item">モルゾ<span class="marquee-dot"></span></span>
+          <span class="marquee-item">キラフ<span class="marquee-dot"></span></span>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="m0 34 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28V82H0Z" fill="#fff3d6" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+      </svg>
+    </section>
+
+    <section class="concept section-pad" id="concept" aria-labelledby="concept-title">
+      <div class="container center">
+        <p class="eyebrow reveal">VOICE × STORY × TALK</p>
+        <h2 class="section-title reveal" id="concept-title">聞く。まねる。<br>話したくなる。</h2>
+        <p class="section-lead reveal">ボタンを押すと、動物の声、短い物語、子どもへの質問が返ってきます。ひとり遊びから親子の会話へ、遊びが自然につながります。</p>
+        <div class="story-steps stagger">
+          <article class="story-step">
+            <span class="step-no">1</span>
+            <h3>きく</h3>
+            <p>森や動物のいろんな声に、耳をすませてみよう。</p>
+          </article>
+          <article class="story-step">
+            <span class="step-no">2</span>
+            <h3>まねる</h3>
+            <p>聞こえた声やリズムを、自分の声で返してみよう。</p>
+          </article>
+          <article class="story-step">
+            <span class="step-no">3</span>
+            <h3>はなす</h3>
+            <p>「きみならどうする？」から、新しいお話が始まる。</p>
+          </article>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 46Q200 8 400 46t400 0t400 0V82H0Z" fill="#43c4e8" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <section class="characters section-pad" id="friends" aria-labelledby="friends-title">
+      <div class="container">
+        <div class="center">
+          <p class="eyebrow reveal">MEET THE FRIENDS</p>
+          <h2 class="section-title reveal" id="friends-title">声の森の、<br>4つのなかま。</h2>
+          <p class="section-lead reveal">同じ線と単純な形から生まれた、コエトモリだけの動物たち。担当する遊びも、声の個性もそれぞれです。</p>
+        </div>
+        <div class="character-grid stagger">
+          <article class="character-card">
+            <svg class="animal-art" viewBox="0 0 240 240" role="img" aria-labelledby="lion-title lion-desc">
+              <title id="lion-title">ライオンのラオン</title><desc id="lion-desc">赤い丸いたてがみと黄色い顔を持つ、元気な声の担当です。</desc><use href="#lion"></use>
+            </svg>
+            <div><h3 class="character-name">ラオン</h3><span class="character-role">元気な声</span><p>大きい声、小さい声。いろんな声を、よく聞いてみよう。</p></div>
+          </article>
+          <article class="character-card">
+            <svg class="animal-art" viewBox="0 0 240 240" role="img" aria-labelledby="penguin-title penguin-desc">
+              <title id="penguin-title">ペンギンのペトリ</title><desc id="penguin-desc">紫の丸い体と水色の翼を持つ、リズム遊びの担当です。</desc><use href="#penguin"></use>
+            </svg>
+            <div><h3 class="character-name">ペトリ</h3><span class="character-role">リズム</span><p>トトン、パチパチ。聞こえたリズムをまねしてみよう。</p></div>
+          </article>
+          <article class="character-card">
+            <svg class="animal-art" viewBox="0 0 240 240" role="img" aria-labelledby="elephant-title elephant-desc">
+              <title id="elephant-title">ゾウのモルゾ</title><desc id="elephant-desc">緑の耳と疑問符のような赤い鼻を持つ、質問遊びの担当です。</desc><use href="#elephant"></use>
+            </svg>
+            <div><h3 class="character-name">モルゾ</h3><span class="character-role">なんで？</span><p>きみならどうする？ 正解のない質問に答えてみよう。</p></div>
+          </article>
+          <article class="character-card">
+            <svg class="animal-art" viewBox="0 0 240 240" role="img" aria-labelledby="giraffe-title giraffe-desc">
+              <title id="giraffe-title">キリンのキラフ</title><desc id="giraffe-desc">紫の長い首と緑の体を持つ、物語の担当です。</desc><use href="#giraffe"></use>
+            </svg>
+            <div><h3 class="character-name">キラフ</h3><span class="character-role">ものがたり</span><p>耳をすませば、小さなお話の扉がゆっくり開くよ。</p></div>
+          </article>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 82V54C120 6 260 6 380 54c120 48 260 48 380 0s260-48 440 0v28Z" fill="#fff3d6" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <section class="features section-pad" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="center">
+          <p class="eyebrow reveal">3 WAYS TO GROW</p>
+          <h2 class="section-title reveal" id="features-title">遊びながら育つ、<br>3つのしかけ。</h2>
+        </div>
+        <div class="feature-grid stagger">
+          <article class="feature-card">
+            <svg class="feature-icon" viewBox="0 0 100 100" role="img" aria-label="声が広がるアイコン"><use href="#icon-voice"></use></svg>
+            <h3>声・物語・質問の<br>3モード</h3>
+            <p>気分に合わせてボタンを押すだけ。短い遊びから、じっくり聞く物語まで楽しめます。</p>
+          </article>
+          <article class="feature-card">
+            <svg class="feature-icon" viewBox="0 0 100 100" role="img" aria-label="遊びが育つアイコン"><use href="#icon-grow"></use></svg>
+            <h3>3〜8歳まで<br>遊び方が変化</h3>
+            <p>小さい頃は音をまねて、大きくなったら物語の続きを考える。成長と一緒に遊びが深まります。</p>
+          </article>
+          <article class="feature-card">
+            <svg class="feature-icon" viewBox="0 0 100 100" role="img" aria-label="画面を使わないアイコン"><use href="#icon-screen"></use></svg>
+            <h3>画面・通信・<br>月額料金なし</h3>
+            <p>本体だけですぐに遊べます。音量調整と自動電源オフ付きで、家庭でも扱いやすい設計です。</p>
+          </article>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="m0 34 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28 60-28 60 28V82H0Z" fill="#8c5bc4" stroke="#181818" stroke-width="5" stroke-linejoin="round"/>
+      </svg>
+    </section>
+
+    <section class="colors section-pad" id="colors" aria-labelledby="colors-title">
+      <div class="container color-layout">
+        <div class="color-stage reveal">
+          <svg id="colorProduct" class="color-product" viewBox="0 0 520 420" role="img" aria-labelledby="color-product-title color-product-desc" style="--product-color:#f23878">
+            <title id="color-product-title">ももいろポップのコエトモリ</title>
+            <desc id="color-product-desc">選択した色に本体カラーが切り替わる、4つの動物ボタン付き知育玩具です。</desc>
+            <use href="#product"></use>
+          </svg>
+          <p class="color-name">選択中：<span id="selectedColor">ももいろポップ</span></p>
+          <p class="sr-only" id="colorLive" aria-live="polite"></p>
+        </div>
+        <div>
+          <p class="eyebrow reveal">CHOOSE YOUR COLOR</p>
+          <h2 class="section-title reveal" id="colors-title">どの色と、<br>森へ行く？</h2>
+          <p class="section-lead reveal">機能はどの色も同じ。好きな色、贈る人を思い浮かべながら選べる6色です。</p>
+          <div class="swatches stagger" aria-label="商品カラーを選択">
+            <button class="swatch" type="button" data-color="#f23878" data-name="ももいろポップ" aria-pressed="true"><span class="swatch-dot" style="--swatch:#f23878"></span><span class="swatch-label">ももいろ<br>ポップ</span></button>
+            <button class="swatch" type="button" data-color="#ffd43b" data-name="おひさまイエロー" aria-pressed="false"><span class="swatch-dot" style="--swatch:#ffd43b"></span><span class="swatch-label">おひさま<br>イエロー</span></button>
+            <button class="swatch" type="button" data-color="#43c4e8" data-name="そらいろブルー" aria-pressed="false"><span class="swatch-dot" style="--swatch:#43c4e8"></span><span class="swatch-label">そらいろ<br>ブルー</span></button>
+            <button class="swatch" type="button" data-color="#f0544f" data-name="りんごレッド" aria-pressed="false"><span class="swatch-dot" style="--swatch:#f0544f"></span><span class="swatch-label">りんご<br>レッド</span></button>
+            <button class="swatch" type="button" data-color="#31b86b" data-name="はっぱグリーン" aria-pressed="false"><span class="swatch-dot" style="--swatch:#31b86b"></span><span class="swatch-label">はっぱ<br>グリーン</span></button>
+            <button class="swatch" type="button" data-color="#8c5bc4" data-name="よぞらパープル" aria-pressed="false"><span class="swatch-dot" style="--swatch:#8c5bc4"></span><span class="swatch-label">よぞら<br>パープル</span></button>
+          </div>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 45Q150 0 300 45T600 45T900 45T1200 45V82H0Z" fill="#ffd43b" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <section class="price section-pad" id="purchase" aria-labelledby="price-title">
+      <div class="container">
+        <div class="price-panel">
+          <div>
+            <p class="eyebrow">READY TO PLAY</p>
+            <h2 id="price-title">コエトモリ<br><span class="product-name">おしゃべりパレット</span></h2>
+            <p class="price-number">6,980<small>円（税込）</small></p>
+            <ul class="spec-list">
+              <li>対象年齢 3〜8歳</li>
+              <li>3つの遊びモード</li>
+              <li>音量調整</li>
+              <li>自動電源オフ</li>
+              <li>画面・通信不要</li>
+              <li>月額料金なし</li>
+            </ul>
+            <a class="btn btn--pink" href="#final">おうちに迎える</a>
+          </div>
+          <div class="price-art">
+            <svg viewBox="0 0 520 420" role="img" aria-labelledby="price-product-title price-product-desc" style="--product-color:#ffd43b">
+              <title id="price-product-title">黄色のコエトモリ おしゃべりパレット</title>
+              <desc id="price-product-desc">持ち手と4つの動物ボタンが付いた、丸い六角形の架空の知育玩具です。</desc>
+              <use href="#product"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 82V54C120 6 260 6 380 54c120 48 260 48 380 0s260-48 440 0v28Z" fill="#31b86b" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <section class="final-cta section-pad" id="final" aria-labelledby="final-title">
+      <div class="container">
+        <div class="cta-panel">
+          <p class="eyebrow">WELCOME TO KOETOMORI</p>
+          <h2 id="final-title">きょうから、<br>おうちに声の森を。</h2>
+          <p>押す、聞く、考える。毎日の遊びから、子どもの新しいことばと親子の会話が生まれます。</p>
+          <span class="cta-price">6,980円（税込）</span>
+          <button class="btn btn--pink cta-bounce" id="demoBuy" type="button">コエトモリをおうちに迎える</button>
+          <p class="demo-note" id="demoNote" aria-live="polite"></p>
+          <div class="cta-animals" aria-hidden="true">
+            <svg viewBox="0 0 240 240"><use href="#lion"></use></svg>
+            <svg viewBox="0 0 240 240"><use href="#penguin"></use></svg>
+            <svg viewBox="0 0 240 240"><use href="#elephant"></use></svg>
+            <svg viewBox="0 0 240 240"><use href="#giraffe"></use></svg>
+          </div>
+        </div>
+      </div>
+      <svg class="section-divider" viewBox="0 0 1200 82" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 46Q200 8 400 46t400 0t400 0V82H0Z" fill="#181818" stroke="#181818" stroke-width="5"/>
+      </svg>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-brand">コエトモリ</p>
+          <p class="footer-copy">声と物語から、子どもの「話したい」を育てる架空の知育コミュニケーション玩具です。</p>
+        </div>
+        <nav aria-label="フッターナビゲーション">
+          <ul class="footer-links">
+            <li><a href="#concept">商品情報</a></li>
+            <li><a href="#features">遊び方</a></li>
+            <li><a href="#purchase">安全・お手入れ</a></li>
+            <li><a href="#purchase">よくある質問</a></li>
+            <li><a href="#top">お問い合わせ</a></li>
+            <li><a href="#top">利用規約・プライバシー</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="footer-bottom">本ページはデザイン研究用に制作した架空ブランドのコンセプトサイトです。実在の商品・企業・キャラクターとは関係ありません。</p>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const product = document.getElementById('colorProduct');
+      const productTitle = document.getElementById('color-product-title');
+      const selectedColor = document.getElementById('selectedColor');
+      const colorLive = document.getElementById('colorLive');
+      const swatches = Array.from(document.querySelectorAll('.swatch'));
+
+      swatches.forEach((button) => {
+        button.addEventListener('click', () => {
+          const color = button.dataset.color;
+          const name = button.dataset.name;
+          swatches.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+          product.style.setProperty('--product-color', color);
+          product.classList.remove('is-changing');
+          void product.getBoundingClientRect();
+          product.classList.add('is-changing');
+          window.setTimeout(() => product.classList.remove('is-changing'), 260);
+          selectedColor.textContent = name;
+          productTitle.textContent = `${name}のコエトモリ`;
+          colorLive.textContent = `商品カラーを${name}に変更しました。`;
+        });
+        button.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            button.click();
+          }
+        });
+      });
+
+      const revealTargets = document.querySelectorAll('.reveal, .stagger');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              currentObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.14, rootMargin: '0px 0px -5% 0px' });
+        revealTargets.forEach((target) => observer.observe(target));
+      } else {
+        revealTargets.forEach((target) => target.classList.add('is-visible'));
+      }
+
+      const demoBuy = document.getElementById('demoBuy');
+      const demoNote = document.getElementById('demoNote');
+      demoBuy.addEventListener('click', () => {
+        demoNote.textContent = 'こちらは架空商品のデモサイトです。購入機能はありません。';
+      });
+      demoBuy.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          demoBuy.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+

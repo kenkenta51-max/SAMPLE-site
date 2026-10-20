@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#244b43">
+  <meta name="description" content="MOSTOの新人スタッフになって、10の接客シーンを体験。マニュアルのルールを会話と選択で身につける接客トレーニングゲーム。">
+  <title>MOSTO｜はじめての接客</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23244b43'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia' font-size='44' font-weight='bold' fill='%23fff9ec'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="motion.css">
+  <script src="data.js" defer></script><script src="stories.js" defer></script><script src="assets/motion/frames.js" defer></script><script src="motion.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">ゲームへ移動</a>
+  <header class="topbar">
+    <div class="brand"><span class="wordmark">MOSTO<span>®</span></span><span class="brand-caption">FAMILY RESTAURANT<br>はじめての接客</span></div>
+    <div class="header-actions"><button id="manual-button" class="quiet" type="button">マニュアル</button><button id="sound-button" class="quiet" type="button" aria-pressed="false">サウンド OFF</button><button id="motion-button" class="quiet motion-button" type="button" aria-pressed="false">動きを止める</button></div>
+  </header>
+  <div class="hud" id="hud" aria-label="研修ステータス"></div>
+  <div class="layout"><aside class="journey" aria-label="研修の道のり" id="journey"></aside><main id="main" tabindex="-1"></main></div>
+  <footer class="site-footer"><span>MOSTO STAFF TRAINING · Ver.2.0</span><span>安全 → 正確 → 親切</span></footer>
+  <dialog id="manual-dialog" aria-labelledby="manual-title"><div class="dialog-top"><div><span class="eyebrow">YOUR POCKET MANUAL</span><h2 id="manual-title">接客のお守り</h2></div><button class="icon-button" id="close-manual" aria-label="マニュアルを閉じる">×</button></div><div id="manual-content"></div></dialog>
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <noscript>このゲームを遊ぶには、ブラウザのJavaScriptを有効にしてください。</noscript>
+</body></html>

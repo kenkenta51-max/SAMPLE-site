@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>✨ お星さまキャッチ ✨</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #0a0a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #ffd966;
+      font-size: clamp(18px, 4vw, 26px);
+      text-align: center;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 16px rgba(255,217,102,0.5);
+    }
+
+    #game-wrap {
+      width: min(520px, 96vw);
+      height: min(560px, 78vh);
+      background: linear-gradient(180deg, #0d0d3a 0%, #1a1a5e 55%, #2d1b69 100%);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* --- HUD --- */
+    #score-area {
+      position: absolute;
+      top: 12px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      z-index: 10;
+    }
+    .badge {
+      background: rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 5px 14px;
+      color: #fff;
+      font-size: clamp(14px, 3.5vw, 18px);
+      font-weight: bold;
+    }
+    #timer-badge { color: #ffd966; }
+
+    /* --- 凡例 --- */
+    .legend {
+      position: absolute;
+      bottom: 10px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      z-index: 10;
+      flex-wrap: wrap;
+      padding: 0 8px;
+    }
+    .leg {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: clamp(10px, 2.5vw, 13px);
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* --- 背景装飾 --- */
+    .moon {
+      position: absolute;
+      top: 18px; right: 36px;
+      font-size: clamp(36px, 8vw, 52px);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    .cloud {
+      position: absolute;
+      font-size: 40px;
+      opacity: 0.13;
+      animation: drift linear infinite;
+      pointer-events: none;
+    }
+    @keyframes drift {
+      from { transform: translateX(-80px); }
+      to   { transform: translateX(110vw); }
+    }
+
+    /* --- ゲームオブジェクト --- */
+    .obj {
+      position: absolute;
+      cursor: pointer;
+      z-index: 5;
+      line-height: 1;
+      transition: transform 0.08s;
+    }
+    .obj:active { transform: scale(1.5) !important; }
+
+    /* --- エフェクト --- */
+    .burst {
+      position: absolute;
+      pointer-events: none;
+      z-index: 8;
+      line-height: 1;
+      animation: pop 0.45s ease-out forwards;
+    }
+    @keyframes pop {
+      0%   { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(2.5) translateY(-30px); opacity: 0; }
+    }
+    .score-float {
+      position: absolute;
+      pointer-events: none;
+      z-index: 9;
+      font-size: 17px;
+      font-weight: bold;
+      color: #ffd966;
+      animation: floatup 0.7s ease-out forwards;
+      white-space: nowrap;
+    }
+    @keyframes floatup {
+      0%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-52px); }
+    }
+
+    /* --- オーバーレイ共通 --- */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 20;
+      background: rgba(8, 8, 38, 0.82);
+      border-radius: 20px;
+      padding: 16px;
+    }
+    .overlay-title {
+      font-size: clamp(24px, 6vw, 34px);
+      font-weight: bold;
+      color: #ffd966;
+      text-shadow: 0 0 16px rgba(255,217,102,0.5);
+      text-align: center;
+    }
+    .overlay-sub {
+      font-size: clamp(13px, 3vw, 16px);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+    }
+
+    /* キャラ紹介カード */
+    .char-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: center;
+      margin: 4px 0;
+    }
+    .char-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 6px 10px;
+      text-align: center;
+      font-size: clamp(10px, 2.5vw, 13px);
+      color: rgba(255,255,255,0.8);
+      min-width: 58px;
+    }
+    .char-card .icon { display: block; font-size: clamp(22px, 5vw, 30px); margin-bottom: 2px; }
+    .char-card.bomb  { color: #ff9999; }
+
+    /* ボタン */
+    .btn {
+      margin-top: 6px;
+      padding: 12px 36px;
+      background: #ffd966;
+      color: #2d1b69;
+      border: none;
+      border-radius: 30px;
+      font-size: clamp(17px, 4vw, 22px);
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 4px 18px rgba(255,217,102,0.4);
+    }
+    .btn:active { transform: scale(0.95); box-shadow: none; }
+
+    /* 結果画面 */
+    #final-score { font-size: clamp(38px, 10vw, 56px); font-weight: bold; color: #fff; }
+    #final-msg   { font-size: clamp(16px, 4vw, 22px); color: #ffd966; text-align: center; }
+
+    /* フッター */
+    footer {
+      color: rgba(255,255,255,0.25);
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h1>✨ お星さまキャッチ ✨</h1>
+
+<div id="game-wrap">
+  <div class="moon">🌕</div>
+  <div class="cloud" style="top:60px;  animation-duration:22s;">☁</div>
+  <div class="cloud" style="top:140px; animation-duration:30s; animation-delay:-10s;">☁</div>
+  <div class="cloud" style="top:40px;  animation-duration:27s; animation-delay:-5s;">☁</div>
+
+  <!-- HUD -->
+  <div id="score-area">
+    <div class="badge">⭐ <span id="score">0</span></div>
+    <div class="badge" id="timer-badge">⏱ <span id="timer">25</span></div>
+    <div class="badge">🔥 <span id="combo">x1</span></div>
+  </div>
+
+  <!-- 凡例 -->
+  <div class="legend">
+    <div class="leg">⭐+1</div>
+    <div class="leg">🌟+2</div>
+    <div class="leg">💎+3</div>
+    <div class="leg">🌈+5</div>
+    <div class="leg">🐱+2</div>
+    <div class="leg">🦋+2</div>
+    <div class="leg">🌸+2</div>
+    <div class="leg">🍀+2</div>
+    <div class="leg">💣-2</div>
+  </div>
+
+  <!-- スタート画面 -->
+  <div class="overlay" id="start-screen">
+    <div class="overlay-title">✨ お星さまキャッチ ✨</div>
+    <div class="overlay-sub">いろんなキャラをつかまえよう！<br>💣ボムはさわらないで！</div>
+    <div class="char-grid">
+      <div class="char-card"><span class="icon">⭐</span>ふつう<br>+1</div>
+      <div class="char-card"><span class="icon">🌟</span>ビッグ<br>+2</div>
+      <div class="char-card"><span class="icon">💎</span>レア<br>+3</div>
+      <div class="char-card"><span class="icon">🌈</span>スペシャル<br>+5</div>
+      <div class="char-card"><span class="icon">🐱</span>ニャンコ<br>+2</div>
+      <div class="char-card"><span class="icon">🦋</span>チョウチョ<br>+2</div>
+      <div class="char-card"><span class="icon">🌸</span>さくら<br>+2</div>
+      <div class="char-card"><span class="icon">🍀</span>クローバー<br>+2</div>
+      <div class="char-card bomb"><span class="icon">💣</span>ボム<br>-2</div>
+    </div>
+    <button class="btn" id="start-btn">▶ スタート！</button>
+  </div>
+
+  <!-- ゲームオーバー画面 -->
+  <div class="overlay" id="end-screen" style="display:none;">
+    <div class="overlay-title">🎉 おわり！</div>
+    <div id="final-score">0</div>
+    <div id="final-msg"></div>
+    <button class="btn" id="retry-btn">もう一回！</button>
+  </div>
+</div>
+
+<footer>タップしてあそぼう！ブラウザで動きます 🌟</footer>
+
+<script>
+const wrap       = document.getElementById('game-wrap');
+const scoreEl    = document.getElementById('score');
+const timerEl    = document.getElementById('timer');
+const comboEl    = document.getElementById('combo');
+const startScr   = document.getElementById('start-screen');
+const endScr     = document.getElementById('end-screen');
+const finalScore = document.getElementById('final-score');
+const finalMsg   = document.getElementById('final-msg');
+
+const CHARS = [
+  { emoji:'⭐', pts:1,  size:32, weight:30, label:'+1' },
+  { emoji:'🌟', pts:2,  size:42, weight:24, label:'+2' },
+  { emoji:'💎', pts:3,  size:36, weight:11, label:'+3' },
+  { emoji:'🌈', pts:5,  size:46, weight:4,  label:'+5✨' },
+  { emoji:'🐱', pts:2,  size:38, weight:18, label:'+2' },
+  { emoji:'🦋', pts:2,  size:36, weight:18, label:'+2' },
+  { emoji:'🌸', pts:2,  size:34, weight:15, label:'+2' },
+  { emoji:'🍀', pts:2,  size:34, weight:9,  label:'+2🍀' },
+  { emoji:'💣', pts:-2, size:36, weight:10, label:'-2💥', bomb:true },
+];
+const TOTAL_W = CHARS.reduce((s,c) => s+c.weight, 0);
+
+function pickChar() {
+  let r = Math.random() * TOTAL_W;
+  for (const c of CHARS) { r -= c.weight; if (r <= 0) return c; }
+  return CHARS[0];
+}
+
+const MSGS = [
+  [0,  '⭐ もっとがんばろう！'],
+  [5,  '😊 じょうずだね！'],
+  [15, '🎉 すごい！！'],
+  [30, '🏆 天才！！！'],
+  [50, '🚀 チャンピオン！！！！'],
+];
+function getMsg(s) {
+  let m = MSGS[0][1];
+  for (const [n,t] of MSGS) if (s >= n) m = t;
+  return m;
+}
+
+let score=0, timeLeft=25, combo=1, gameActive=false;
+let spawnInterval, tickInterval, objs=[];
+
+function spawnObj() {
+  if (!gameActive) return;
+  const ch = pickChar();
+  const el = document.createElement('div');
+  el.className = 'obj';
+  el.textContent = ch.emoji;
+  el.style.fontSize = ch.size + 'px';
+
+  const pad = 50;
+  const maxX = wrap.offsetWidth  - pad * 2;
+  const maxY = wrap.offsetHeight - 120;
+  el.style.left = (pad + Math.random() * maxX) + 'px';
+  const sy = 55 + Math.random() * maxY;
+  el.style.top = sy + 'px';
+  el.style.opacity = '0';
+  el.style.transition = 'opacity 0.2s, top 2.2s linear';
+  el.style.filter = ch.bomb
+    ? 'drop-shadow(0 0 7px rgba(255,80,80,0.9))'
+    : ch.pts >= 5
+      ? 'drop-shadow(0 0 12px rgba(160,255,120,0.95))'
+      : 'drop-shadow(0 0 5px rgba(255,220,50,0.75))';
+
+  wrap.appendChild(el);
+  objs.push(el);
+
+  requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.top = (sy + 70) + 'px';
+  });
+
+  el._timeout = setTimeout(() => removeObj(el, false), 1600 + Math.random() * 1400);
+  el.addEventListener('pointerdown', e => { e.stopPropagation(); clearTimeout(el._timeout); catchObj(el, ch); });
+}
+
+function catchObj(el, ch) {
+  if (!el.parentNode) return;
+  const x = parseFloat(el.style.left);
+  const y = parseFloat(el.style.top);
+
+  // バースト
+  const burst = document.createElement('div');
+  burst.className = 'burst';
+  burst.textContent = ch.emoji;
+  burst.style.cssText = `left:${x}px;top:${y}px;font-size:${ch.size}px;`;
+  wrap.appendChild(burst);
+  setTimeout(() => burst.remove(), 450);
+
+  // スコア浮き文字
+  const pts = ch.bomb ? ch.pts : ch.pts * combo;
+  const fl = document.createElement('div');
+  fl.className = 'score-float';
+  fl.textContent = ch.label + (!ch.bomb && combo > 1 ? ' x'+combo : '');
+  fl.style.cssText = `left:${x+8}px;top:${y-8}px;${ch.bomb ? 'color:#ff8888;' : ''}`;
+  wrap.appendChild(fl);
+  setTimeout(() => fl.remove(), 700);
+
+  score = Math.max(0, score + pts);
+  combo = ch.bomb ? 1 : Math.min(combo + 1, 10);
+  scoreEl.textContent = score;
+  comboEl.textContent = 'x' + combo;
+  removeObj(el, true);
+}
+
+function removeObj(el, caught) {
+  if (!caught) { combo = 1; comboEl.textContent = 'x1'; }
+  el.parentNode && el.parentNode.removeChild(el);
+  objs = objs.filter(o => o !== el);
+}
+
+function startGame() {
+  score=0; timeLeft=25; combo=1; gameActive=true;
+  scoreEl.textContent='0'; timerEl.textContent='25'; comboEl.textContent='x1';
+  objs.forEach(o => o.remove()); objs=[];
+  startScr.style.display='none';
+  endScr.style.display='none';
+
+  spawnObj(); spawnObj(); spawnObj();
+  spawnInterval = setInterval(spawnObj, 650);
+  tickInterval  = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 5) timerEl.style.color = '#ff8888';
+    if (timeLeft <= 0) endGame();
+  }, 1000);
+}
+
+function endGame() {
+  gameActive=false;
+  clearInterval(spawnInterval);
+  clearInterval(tickInterval);
+  objs.forEach(o => { clearTimeout(o._timeout); o.remove(); });
+  objs=[];
+  finalScore.textContent = score + ' てん';
+  finalMsg.textContent   = getMsg(score);
+  endScr.style.display   = 'flex';
+  timerEl.style.color    = '#ffd966';
+}
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('retry-btn').addEventListener('click', startGame);
+</script>
+</body>
+</html>

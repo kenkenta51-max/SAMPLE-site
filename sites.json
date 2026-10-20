@@ -1,0 +1,116 @@
+[
+  {
+    "slug": "hoshi-catch-game",
+    "title": "星キャッチゲーム",
+    "source_repository": "kenkenta51-max/hoshi-catch-game",
+    "source_commit": "6370c0c8df64c91df6403f5128200cbac1f67daa",
+    "original_url": "https://kenkenta51-max.github.io/hoshi-catch-game/"
+  },
+  {
+    "slug": "UN-JOUL-LP",
+    "title": "Un Jour",
+    "source_repository": "kenkenta51-max/UN-JOUL-LP",
+    "source_commit": "9cbfde9ae9cde44b1535c56d6fe3982afa9631f3",
+    "original_url": "https://kenkenta51-max.github.io/UN-JOUL-LP/"
+  },
+  {
+    "slug": "skillshift-ai-academy",
+    "title": "SkillShift AI Academy",
+    "source_repository": "kenkenta51-max/skillshift-ai-academy",
+    "source_commit": "73b3e75ff5ef2275bc2bb7e748971ba8cdd6a0f7",
+    "original_url": "https://kenkenta51-max.github.io/skillshift-ai-academy/"
+  },
+  {
+    "slug": "lumina-skin-clinic",
+    "title": "LUMINA SKIN CLINIC",
+    "source_repository": "kenkenta51-max/lumina-skin-clinic",
+    "source_commit": "d757b503dc82340680a727c7762f314ad081c7ab",
+    "original_url": "https://kenkenta51-max.github.io/lumina-skin-clinic/"
+  },
+  {
+    "slug": "koetomori",
+    "title": "こえともり",
+    "source_repository": "kenkenta51-max/koetomori",
+    "source_commit": "ac2bac62d11fbc5a4b6898d15ddc2271dcee04a0",
+    "original_url": "https://kenkenta51-max.github.io/koetomori/"
+  },
+  {
+    "slug": "mosto-first-shift",
+    "title": "MOSTO はじめての接客",
+    "source_repository": "kenkenta51-max/mosto-first-shift",
+    "source_commit": "9c9646e1555f48796580789ec05a8a05ea4b4f3b",
+    "original_url": "https://kenkenta51-max.github.io/mosto-first-shift/"
+  },
+  {
+    "slug": "kurahaus-sample",
+    "title": "KURAHAUS",
+    "source_repository": "kenkenta51-max/kurahaus-sample",
+    "source_commit": "a82868e4492550fc8eab80fd0e79e594b039299c",
+    "original_url": "https://kenkenta51-max.github.io/kurahaus-sample/"
+  },
+  {
+    "slug": "pink-crater",
+    "title": "PINK CRATER",
+    "source_repository": "kenkenta51-max/pink-crater",
+    "source_commit": "26ba845813d1617eee90e09b18c32109142fc70a",
+    "original_url": "https://kenkenta51-max.github.io/pink-crater/"
+  },
+  {
+    "slug": "kogashi-biyori",
+    "title": "こがし日和",
+    "source_repository": "kenkenta51-max/kogashi-biyori",
+    "source_commit": "61c881af2ee9ef9d8e2b4b60ed2e097c685b9479",
+    "original_url": "https://kenkenta51-max.github.io/kogashi-biyori/"
+  },
+  {
+    "slug": "pokorhythm",
+    "title": "ぽこりずむ",
+    "source_repository": "kenkenta51-max/pokorhythm",
+    "source_commit": "30fcd1e35899102463ea7e1cf53572a67034d04c",
+    "original_url": "https://kenkenta51-max.github.io/pokorhythm/"
+  },
+  {
+    "slug": "melto-frozen-yogurt",
+    "title": "MELTO",
+    "source_repository": "kenkenta51-max/melto-frozen-yogurt",
+    "source_commit": "016413fcc9ecc1b6a31934bce94ff2c2eb0c6a33",
+    "original_url": "https://kenkenta51-max.github.io/melto-frozen-yogurt/"
+  },
+  {
+    "slug": "ao-works",
+    "title": "AO WORKS — PulseGuard AI",
+    "source_repository": "kenkenta51-max/-",
+    "source_commit": "08103f925114e4aea9641fd24519fb92b997d052",
+    "original_url": "https://kenkenta51-max.github.io/-/"
+  },
+  {
+    "slug": "playriot",
+    "title": "PLAYRIOT",
+    "source_repository": "kenkenta51-max/playriot",
+    "source_commit": "8423f5603b5ddbc4a6fec17d240205767fe79753",
+    "original_url": "https://kenkenta51-max.github.io/playriot/"
+  },
+  {
+    "slug": "void-dept",
+    "title": "VOID DEPT.",
+    "source_repository": "kenkenta51-max/void-dept",
+    "source_commit": "706355b0fa7c0a14da5c4806d4b804098e69874b",
+    "original_url": "https://kenkenta51-max.github.io/void-dept/"
+  },
+  {
+    "slug": "donuts",
+    "title": "Cafe CODIA — ドーナツ",
+    "source_repository": "kenkenta51-max/donuts",
+    "source_commit": "d4840420f95a5ee5ce869be2405f4abd23c4d99a",
+    "original_url": "https://kenkenta51-max.github.io/donuts/",
+    "public_directory": "."
+  },
+  {
+    "slug": "ami-hair-atelier",
+    "title": "Ami Hair Atelier",
+    "source_repository": "kenkenta51-max/ami-hair-atelier",
+    "source_commit": "ea7459e20b449a8577a30b84a224b61501f6fc2c",
+    "original_url": "https://kenkenta51-max.github.io/ami-hair-atelier/",
+    "public_directory": "dist"
+  }
+]
