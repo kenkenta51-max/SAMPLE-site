@@ -88,3 +88,9 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 `sites/melua-clinic/` に架空の医療脱毛クリニックの完成版LPを追加しました。FVから最終予約CTAまで、料金プラン切り替え・自然な産毛による肌比較スライダー・FAQを含みます。予約はデモ表示です。
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/melua-clinic/
+
+## Pantry Matchaの追加
+
+`sites/pantry-matcha/` に、抹茶カフェ「Pantry Matcha」のモバイルオーダーを追加しました。Canvaのメニュー表と店舗写真をもとに制作しています。FVは商品写真が入れ替わるネオンライム×ホットピンクのポスター風デザインで、スワイプで切り替わるギャラリー、サイズ・ミルク・濃さ・甘さ・氷・トッピングのカスタマイズ（選択内容に合わせて商品画像と価格が変化）、カート追加のアニメーション、注文確認〜完了画面を含みます。トッピング画像はCanvaのAI画像生成で作成しました。注文・決済はデモで、価格・店舗情報は仮のものです。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pantry-matcha/
