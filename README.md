@@ -1,6 +1,6 @@
 # Sample Site
 
-19件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+22件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全20サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全22サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -94,3 +94,9 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 `sites/pantry-matcha/` に、抹茶カフェ「Pantry Matcha」のモバイルオーダーを追加しました。Canvaのメニュー表と店舗写真をもとに制作しています。FVは商品写真が入れ替わるネオンライム×ホットピンクのポスター風デザインで、スワイプで切り替わるギャラリー、サイズ・ミルク・濃さ・甘さ・氷・トッピングのカスタマイズ（選択内容に合わせて商品画像と価格が変化）、カート追加のアニメーション、注文確認〜完了画面を含みます。トッピング画像はCanvaのAI画像生成で作成しました。注文・決済はデモで、価格・店舗情報は仮のものです。
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pantry-matcha/
+
+## 時の雫の追加
+
+`sites/toki-no-shizuku/` に、ゼルダの伝説 時のオカリナの世界観から着想した架空のドリンクショップ「時の雫」を追加しています。ローディングのトライフォース、妖精のカーソル、宝箱のカート演出（空きビン4本まで）、スクロールで変わる昼夜とBGM、オカリナで開く裏メニューを含みます。画像はすべて生成画像で、BGM・効果音はブラウザ内で合成するオリジナルです。実際の注文・決済は行いません。非公式のファン制作です。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/toki-no-shizuku/
