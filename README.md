@@ -1,6 +1,6 @@
 # Sample Site
 
-23件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+24件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全23サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全24サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -100,3 +100,13 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 `sites/toki-no-shizuku/` に、ゼルダの伝説 時のオカリナの世界観から着想した架空のドリンクショップ「時の雫」を追加しています。ローディングのトライフォース、妖精のカーソル、宝箱のカート演出（空きビン4本まで）、スクロールで変わる昼夜とBGM、オカリナで開く裏メニューを含みます。画像はすべて生成画像で、BGM・効果音はブラウザ内で合成するオリジナルです。実際の注文・決済は行いません。非公式のファン制作です。
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/toki-no-shizuku/
+
+## ひだまりベーカリーの追加
+
+`sites/hidamari-bakery/` に、架空のパン屋さん「ひだまりベーカリー」の3Dスクロールサイトを追加しています。Canvaのパンメニュー（黄×グレーのオーニング、テラコッタ色の文字、水彩のパン10種）をもとに、ポップなローポリのミニチュアの町として3Dで作り直しました。スクロールに合わせて、夜明け前の製粉所 → 小麦粉トラックの走行（カメラが追従） → 生地をこねる → オーブンでふくらむ → 焼きたてを並べる → シャッターが上がって開店 → カメラが引いてロゴ表示、と進みます。夜から朝へ空の色と時計も変わります。
+
+React Three Fiber・Three.js・GSAP（ScrollTrigger）で制作しています。ソースは `app/`、公開用のビルド済みファイルは `dist/` です。パンや建物はすべてコードで作った3Dモデルで、Canvaの水彩イラストは最下部のメニューにだけ使っています。店舗情報・価格はサンプルです。
+
+再ビルド: `cd sites/hidamari-bakery/app && npm install && npm run build`（`../dist/` に出力）
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/hidamari-bakery/

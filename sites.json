@@ -168,5 +168,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "."
+  },
+  {
+    "slug": "hidamari-bakery",
+    "title": "ひだまりベーカリー — パン屋さんの朝（3Dスクロール）",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "dist"
   }
 ]
