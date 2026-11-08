@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import World from './World.jsx';
 import { buildTimeline, scrollToChapter } from './timeline.js';
+import { Signature, Timetable, Kodawari, News, Access, Sns } from './Sections.jsx';
 
 const STEPS = ['小麦粉がとどく', 'こねる', 'ふくらむ', 'ならべる', '開店！'];
 const CHAPTERS = [
@@ -40,6 +41,7 @@ export default function App() {
   const [fontsReady, setFontsReady] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
   const [hud, setHud] = useState({ progress: 0, clock: '3:50', chapter: 0 });
+  const [past, setPast] = useState(false);
 
   useEffect(() => {
     let done = false;
@@ -59,14 +61,18 @@ export default function App() {
     return () => { clearTimeout(t); kill(); };
   }, [sceneReady]);
 
-  // メニュー以降に来たら、固定表示の3D用UIを隠す
+  // メニュー以降に来たら、固定表示の3D用UIを隠し、FVの描画も止める
   useEffect(() => {
     const menu = document.getElementById('menu');
-    const io = new IntersectionObserver(([e]) => {
-      document.body.classList.toggle('is-past-story', e.isIntersecting || e.boundingClientRect.top < 0);
-    }, { rootMargin: '0px 0px -35% 0px' });
-    io.observe(menu);
-    return () => io.disconnect();
+    const check = () => {
+      const p = menu.getBoundingClientRect().top < window.innerHeight * 0.65;
+      document.body.classList.toggle('is-past-story', p);
+      setPast(p);
+    };
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    return () => { window.removeEventListener('scroll', check); window.removeEventListener('resize', check); };
   }, []);
 
   const dayish = hud.chapter >= 5;
@@ -80,7 +86,7 @@ export default function App() {
 
       <div className="stage" aria-hidden="true">
         {fontsReady && (
-          <Canvas shadows flat dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 300, position: [24, 21, 30] }}
+          <Canvas frameloop={past ? 'never' : 'always'} shadows flat dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 300, position: [24, 21, 30] }}
             gl={{ antialias: true }} onCreated={() => setTimeout(() => setSceneReady(true), 400)}>
             <World />
           </Canvas>
@@ -154,18 +160,20 @@ export default function App() {
           </div>
         </section>
 
-        <section className="info">
-          <div className="info__inner">
-            <Logo />
-            <dl>
-              <div><dt>営業時間</dt><dd>7:00 – 18:00（売り切れしだい終了）</dd></div>
-              <div><dt>定休日</dt><dd>火曜日</dd></div>
-              <div><dt>場所</dt><dd>ひだまり町 1-2-3（風車のとなり）</dd></div>
-            </dl>
-            <p className="note">※このサイトは架空のパン屋さんのデモです。店舗情報・価格はサンプルです。</p>
-          </div>
-        </section>
-        <footer className="ftr">© HIDAMARI BAKERY (Sample)</footer>
+        <Signature />
+        <Timetable />
+        <Kodawari />
+        <News />
+        <Access />
+        <Sns />
+        <footer className="ftr">
+          <Logo />
+          <nav className="ftr__nav" aria-label="ページ内リンク">
+            {[['#menu', 'メニュー'], ['#signature', '人気No.1'], ['#timetable', '焼きあがり時間'], ['#kodawari', 'こだわり'], ['#news', 'お知らせ'], ['#access', 'アクセス']].map(([h, t]) => <a key={h} href={h}>{t}</a>)}
+          </nav>
+          <p className="ftr__note">※このサイトは架空のパン屋さんのデモです。店舗情報・価格はサンプルです。</p>
+          <small>© HIDAMARI BAKERY (Sample)</small>
+        </footer>
       </main>
     </>
   );

@@ -107,6 +107,8 @@ HTML中心の16件を対象とし、Vite製の `hair-shindan`・`monster-trail`�
 
 React Three Fiber・Three.js・GSAP（ScrollTrigger）で制作しています。ソースは `app/`、公開用のビルド済みファイルは `dist/` です。パンや建物はすべてコードで作った3Dモデルで、Canvaの水彩イラストは最下部のメニューにだけ使っています。店舗情報・価格はサンプルです。
 
+ストーリーの後には、メニュー・人気No.1（ドラッグで回せる3Dのケーキスタンド）・焼きあがり時間（3Dの木の看板。今の時刻からつぎの焼きあがりを表示）・こだわり（風車と麦畑と牛の3Dジオラマ）・お知らせ（コルクボード）・アクセス（駅からの3D立体マップ）・SNSを続けています。3Dの小さなシーンは画面に入ったときだけ描画し、FVの3Dはストーリーを過ぎると描画を止めます。
+
 再ビルド: `cd sites/hidamari-bakery/app && npm install && npm run build`（`../dist/` に出力）
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/hidamari-bakery/
