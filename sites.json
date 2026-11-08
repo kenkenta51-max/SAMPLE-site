@@ -160,5 +160,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "."
+  },
+  {
+    "slug": "haruma-recruit",
+    "title": "晴間建設 — 新卒採用サイト",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "."
   }
 ]
