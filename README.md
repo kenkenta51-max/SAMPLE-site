@@ -1,6 +1,6 @@
 # Sample Site
 
-24件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+25件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全24サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全25サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -112,3 +112,7 @@ React Three Fiber・Three.js・GSAP（ScrollTrigger）で制作しています�
 再ビルド: `cd sites/hidamari-bakery/app && npm install && npm run build`（`../dist/` に出力）
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/hidamari-bakery/
+
+## 振袖 咲日 — SAKUHI の追加
+
+`sites/sakuhi-furisode/index.html` に架空の振袖アトリエを追加しました。トップ・振袖コレクション・6着の詳細・プラン一覧と3つの詳細・撮影・ブランド・店舗・FAQ・プライバシー・相談予約デモまで、画像・CSS・JavaScriptを1つのHTMLに内包しています。生成画像を使用し、花びら、回転、スクロール連動、背景色切り替えを実装。お気に入り・絞り込み・料金試算も利用できます。実際の送信・予約は行いません。

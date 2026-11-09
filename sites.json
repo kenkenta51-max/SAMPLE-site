@@ -176,5 +176,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "dist"
+  },
+  {
+    "slug": "sakuhi-furisode",
+    "title": "振袖 咲日 — SAKUHI FURISODE ATELIER",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "."
   }
 ]
