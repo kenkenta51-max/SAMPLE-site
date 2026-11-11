@@ -1,6 +1,6 @@
 # Sample Site
 
-25件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+26件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全25サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全26サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -116,3 +116,12 @@ React Three Fiber・Three.js・GSAP（ScrollTrigger）で制作しています�
 ## 振袖 咲日 — SAKUHI の追加
 
 `sites/sakuhi-furisode/index.html` に架空の振袖アトリエを追加しました。トップ・振袖コレクション・6着の詳細・プラン一覧と3つの詳細・撮影・ブランド・店舗・FAQ・プライバシー・相談予約デモまで、画像・CSS・JavaScriptを1つのHTMLに内包しています。生成画像を使用し、花びら、回転、スクロール連動、背景色切り替えを実装。お気に入り・絞り込み・料金試算も利用できます。実際の送信・予約は行いません。
+
+
+## ポッケ放課後クラブの追加
+
+`sites/pokke-after-school/index.html` に、架空の児童クラブを追加しました。TOP、クラブ紹介、あそびと一日、施設と安心、入会案内、4件の記事、見学フォーム、プライバシーを含みます。初期表示で全画面を覆う黄色い扉が、スクロール・タップで開いてサイトが現れます。画像・CSS・JavaScriptを1つのHTMLに内包し、スマートフォンと動きの軽減設定に対応しています。実際の募集・予約・データ送信は行いません。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pokke-after-school/
+
+JavaScript構文・82項目の機能検査・コレクションのビルドとローカル参照監査を実施。ブラウザ環境の接続エラーにより、実機表示の確認は未完了です。

@@ -184,5 +184,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "."
+  },
+  {
+    "slug": "pokke-after-school",
+    "title": "ポッケ放課後クラブ — わくわくのつづきへ",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "."
   }
 ]
