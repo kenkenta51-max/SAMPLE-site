@@ -125,3 +125,7 @@ React Three Fiber・Three.js・GSAP（ScrollTrigger）で制作しています�
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pokke-after-school/
 
 JavaScript構文・82項目の機能検査・コレクションのビルドとローカル参照監査を実施。ブラウザ環境の接続エラーにより、実機表示の確認は未完了です。
+
+
+ポッケの制作データ一式： https://kenkenta51-max.github.io/SAMPLE-site/sites/pokke-after-school/download.html
+単体HTML・編集用ソース・生成画像の原寸データ・仕様書・再構築ツールをZIPに収録しています。
