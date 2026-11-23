@@ -328,3 +328,30 @@ main { position: relative; z-index: 5; }
   .cork { border-width: 10px; }
   .pc { display: none; }
 }
+
+/* ═════════ リアル写真への差し替え ═════════ */
+.sig-photo { position: relative; margin: 0; padding-top: 70px; }
+.sig-photo__frame { border-radius: 28px; overflow: hidden; box-shadow: 0 10px 0 rgba(90,42,15,.12), 0 24px 48px rgba(90,42,15,.18); border: 6px solid #fff; transform: rotate(-1.5deg); }
+.sig-photo__frame img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.wood-sign { position: absolute; top: 0; left: 50%; transform: translateX(-50%); display: grid; justify-items: center; animation: sway 4s ease-in-out infinite; transform-origin: 50% 0; z-index: 2; }
+@keyframes sway { 0%, 100% { transform: translateX(-50%) rotate(-3deg); } 50% { transform: translateX(-50%) rotate(3deg); } }
+.wood-sign__rope { width: 120px; height: 34px; border: 3px solid #5A5A66; border-bottom: 0; border-radius: 60px 60px 0 0; }
+.wood-sign__board {
+  display: grid; justify-items: center; line-height: 1; padding: 10px 26px 12px; margin-top: -4px; border-radius: 10px;
+  font-family: var(--serif); font-weight: 800; font-size: 40px; color: var(--yellow);
+  background: repeating-linear-gradient(0deg, rgba(90,42,15,.0) 0 14px, rgba(90,42,15,.25) 14px 16px), linear-gradient(#C48A55, #A8703F);
+  border: 4px solid #8A5530; box-shadow: 0 6px 0 rgba(90,42,15,.3);
+  text-shadow: 0 2px 0 rgba(90,42,15,.5);
+}
+.wood-sign__board small { font-family: var(--round); font-size: 15px; color: #FFF6DF; font-weight: 900; margin-bottom: 4px; }
+.sig-photo__spark { position: absolute; width: 18px; height: 18px; background: var(--yellow); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.4s ease-in-out infinite; }
+.sig-photo__spark--a { top: 90px; right: 6%; }
+.sig-photo__spark--b { bottom: 12%; left: -6px; width: 26px; height: 26px; animation-delay: .8s; }
+.sig-photo__spark--c { bottom: -8px; right: 22%; animation-delay: 1.5s; }
+@keyframes twinkle { 0%, 100% { transform: scale(.6) rotate(0); opacity: .5; } 50% { transform: scale(1.1) rotate(45deg); opacity: 1; } }
+.points li { padding: 0 0 22px; overflow: hidden; }
+.points__img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; margin-bottom: 14px; }
+.points li > :not(img) { margin-left: 20px; margin-right: 20px; }
+.points__no { display: inline-block; }
+.menu__grid img { border-radius: 18px; }
+@media (prefers-reduced-motion: reduce) { .wood-sign, .sig-photo__spark { animation: none; } }

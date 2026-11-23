@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TimetableScene, SignatureScene, FarmScene, AccessScene, BAKE_TIMES } from './minis.jsx';
+import { TimetableScene, FarmScene, AccessScene, BAKE_TIMES } from './minis.jsx';
 
 function Heading({ en, ja, light }) {
   return (
@@ -15,18 +15,28 @@ export function Signature() {
   return (
     <section id="signature" className="sec sec--signature">
       <div className="sec__inner sec__split">
-        <SignatureScene />
+        <figure className="sig-photo">
+          <div className="sig-photo__frame">
+            <img src="photos/signature-bear.webp" alt="ケーキスタンドにのった、粉砂糖の白熊のパン" width="1200" height="900" loading="lazy" />
+          </div>
+          <div className="wood-sign" aria-hidden="true">
+            <span className="wood-sign__rope" />
+            <span className="wood-sign__board"><small>人気</small>No.1</span>
+          </div>
+          <span className="sig-photo__spark sig-photo__spark--a" aria-hidden="true" />
+          <span className="sig-photo__spark sig-photo__spark--b" aria-hidden="true" />
+          <span className="sig-photo__spark sig-photo__spark--c" aria-hidden="true" />
+        </figure>
         <div className="signature__text">
           <Heading en="SIGNATURE" ja="いちばん人気のパン" />
           <p className="badge-line"><span className="badge">人気 No.1</span><span className="badge badge--gray">1日 60個かぎり</span></p>
           <h3 className="signature__name">くまさんのぱん</h3>
-          <p className="signature__desc">ふわふわのミルク生地に、とろ〜りカスタードをたっぷり。粉砂糖のおめかしをして、チョコでお顔を描いたら完成です。毎朝 8:30 ごろに焼きあがります。</p>
+          <p className="signature__desc">ふわふわのミルク生地に、とろ〜りカスタードをたっぷり。粉砂糖で白くおめかしして、チョコでお顔を描いたら、白くまさんの完成です。毎朝 8:30 ごろに焼きあがります。</p>
           <p className="signature__price"><b>500</b>円</p>
           <ol className="ranking">
             <li><img src="menu/melonpan.webp" alt="" width="72" height="72" loading="lazy" /><span><small>No.2</small>めろんぱん</span></li>
             <li><img src="menu/croissant.webp" alt="" width="72" height="72" loading="lazy" /><span><small>No.3</small>くろわっさん</span></li>
           </ol>
-          <p className="hint">3Dのパンはドラッグでくるっと回せます</p>
         </div>
       </div>
     </section>
@@ -70,10 +80,10 @@ export function Timetable() {
 
 // ───────── こだわり
 const POINTS = [
-  { no: '01', title: '国産小麦100%', text: 'となりの風車の製粉所で、毎週ひきたての国産小麦を仕入れています。香りがちがいます。' },
-  { no: '02', title: '北海道産バター', text: 'くろわっさんやでにっしゅには、コクのある北海道産の発酵バターをぜいたくに。' },
-  { no: '03', title: '自家製の天然酵母', text: 'レーズンから育てた酵母で、ひと晩じっくり発酵。もっちり、やさしい甘みに。' },
-  { no: '04', title: '毎朝4時から仕込み', text: '作りおきはしません。その日の分を、その日の朝に。だからいつも焼きたてです。' },
+  { no: '01', img: 'k-wheat', alt: '木のスコップに入ったひきたての小麦粉と麦の穂', title: '国産小麦100%', text: 'となりの風車の製粉所で、毎週ひきたての国産小麦を仕入れています。香りがちがいます。' },
+  { no: '02', img: 'k-butter', alt: '木の板にのった発酵バターと、折りこみ中のクロワッサン生地', title: '北海道産バター', text: 'くろわっさんやでにっしゅには、コクのある北海道産の発酵バターをぜいたくに。' },
+  { no: '03', img: 'k-yeast', alt: 'ガラスびんのレーズン酵母と、ふくらんだパン生地', title: '自家製の天然酵母', text: 'レーズンから育てた酵母で、ひと晩じっくり発酵。もっちり、やさしい甘みに。' },
+  { no: '04', img: 'k-dawn', alt: '夜明け前の厨房で生地をこねるパン職人の手', title: '毎朝4時から仕込み', text: '作りおきはしません。その日の分を、その日の朝に。だからいつも焼きたてです。' },
 ];
 export function Kodawari() {
   return (
@@ -84,6 +94,7 @@ export function Kodawari() {
         <ul className="points">
           {POINTS.map((p) => (
             <li key={p.no}>
+              <img className="points__img" src={`photos/${p.img}.webp`} alt={p.alt} width="800" height="600" loading="lazy" />
               <span className="points__no">{p.no}</span>
               <h3>{p.title}</h3>
               <p>{p.text}</p>
