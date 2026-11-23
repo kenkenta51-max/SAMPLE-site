@@ -1,6 +1,6 @@
 # Sample Site
 
-26件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+27件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全26サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全27サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -129,3 +129,17 @@ JavaScript構文・82項目の機能検査・コレクションのビルドと�
 
 ポッケの制作データ一式： https://kenkenta51-max.github.io/SAMPLE-site/sites/pokke-after-school/download.html
 単体HTML・編集用ソース・生成画像の原寸データ・仕様書・再構築ツールをZIPに収録しています。
+
+## ほりほりダイブの追加
+
+`sites/horihori-dive/index.html` に、ブロックの世界を下へ下へと掘り進むスマホ向け3Dゲーム「ほりほりダイブ」を追加しました。小学生でも遊べるよう、操作は ◀ ▼ ▶ の3つのボタンだけにし、文字はひらがな中心にしています。
+
+- こうせき（せきたん・てっこう・きん・ダイヤ・にじいし）を掘って💎を集めます。
+- 減っていく「おなか」は、きのみブロックで回復します。
+- ようがん・落ちてくる砂・コウモリンに当たるとハートが減ります。
+- 25mごとにボーナスがあり、最高記録の深さには🚩の線が出ます。
+- 集めた💎で、おみせのピッケル（掘る速さ）、ハート、ヘルメットの色を買えます。記録と💎はブラウザに保存されます。
+
+キャラクター・ブロック・地形は、Three.js（`vendor/` に同梱、MITライセンス）を使ってすべてコードで作ったオリジナルです。ドット絵のテクスチャはcanvasで、効果音はWeb Audioで生成しています。PCでは矢印キーでも遊べます。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/horihori-dive/
