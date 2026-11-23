@@ -169,10 +169,26 @@ function rank(s) {
   return 'C';
 }
 
+const CONFETTI = Array.from({ length: 36 }, (_, i) => ({
+  left: (i * 37) % 100,
+  delay: ((i * 13) % 20) / 10,
+  dur: 2.6 + ((i * 7) % 10) / 6,
+  color: ['#ff8fb1', '#ffe066', '#8fd0ff', '#b5f0a0', '#c4a8ff'][i % 5],
+  size: 6 + (i % 4) * 2,
+}));
+
 function Clear({ onRestart }) {
   const s = useStore((x) => x);
   return (
     <div className="screen clear-screen">
+      <div className="confetti" aria-hidden="true">
+        {CONFETTI.map((c, i) => (
+          <span
+            key={i}
+            style={{ left: `${c.left}%`, animationDelay: `${c.delay}s`, animationDuration: `${c.dur}s`, background: c.color, width: c.size, height: c.size * 1.6 }}
+          />
+        ))}
+      </div>
       <div className="card">
         <p className="eyebrow">体験版クリア！</p>
         <h2>とびらの むこうに いたのは……</h2>
@@ -260,6 +276,8 @@ export default function App() {
       </Canvas>
       <Hud />
       {phase === 'playing' && <TouchControls />}
+      {phase === 'clearing' && <div className="flash" aria-hidden="true" />}
+      <div className="fade-in" key={runId} aria-hidden="true" />
       {phase === 'title' && <Title onStart={start} />}
       {phase === 'paused' && <Paused />}
       {phase === 'gameover' && <GameOver />}

@@ -3,6 +3,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ModelSlot } from './models/glb.jsx';
+import StaticMerge from './StaticMerge.jsx';
 
 const TINTS = {
   grass: { top: '#b8eca6', rim: '#9fdf8e', body: '#f3d3b4' },
@@ -84,9 +85,11 @@ export function FarClouds() {
   return (
     <group ref={group} position={[0, 0, -35]}>
       <group position={[0, 0, 35]}>
-        {clouds.map((c, i) => (
-          <Puff key={i} position={c.pos} scale={c.s} seed={c.seed} />
-        ))}
+        <StaticMerge>
+          {clouds.map((c, i) => (
+            <Puff key={i} position={c.pos} scale={c.s} seed={c.seed} />
+          ))}
+        </StaticMerge>
       </group>
     </group>
   );
@@ -306,7 +309,25 @@ function TowerLook({ p }) {
   );
 }
 
-const LOOKS = { island: IslandLook, cloud: CloudLook, crumble: CrumbleLook, flower: FlowerLook, candy: CandyLook, tower: TowerLook };
+function RainbowCloudLook({ p }) {
+  const colors = ['#ff9aa2', '#ffc29a', '#fff09a', '#b5f0a0', '#9ad8ff', '#c4a8ff'];
+  return (
+    <group>
+      <CloudLook p={p} />
+      {colors.map((c, i) => {
+        const a = (i / colors.length) * Math.PI * 2;
+        return (
+          <mesh key={c} position={[Math.cos(a) * p.r * 0.95, -0.25, Math.sin(a) * p.r * 0.95]} scale={0.32}>
+            <sphereGeometry args={[1, 10, 8]} />
+            <meshStandardMaterial color={c} emissive={c} emissiveIntensity={0.35} roughness={0.8} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
+const LOOKS = { rainbow: RainbowCloudLook, island: IslandLook, cloud: CloudLook, crumble: CrumbleLook, flower: FlowerLook, candy: CandyLook, tower: TowerLook };
 
 export function Platforms({ world }) {
   const refs = useRef({});
@@ -340,7 +361,13 @@ export function Platforms({ world }) {
         const Look = LOOKS[p.look];
         return (
           <group key={p.id} ref={(el) => (refs.current[p.id] = el)} position={[p.x, p.y, p.z]}>
-            {p.look === 'spring' ? <SpringLook p={p} squashRef={(el) => (springRefs.current[p.id] = el)} /> : Look ? <Look p={p} /> : null}
+            {p.look === 'spring' ? (
+              <SpringLook p={p} squashRef={(el) => (springRefs.current[p.id] = el)} />
+            ) : Look ? (
+              <StaticMerge>
+                <Look p={p} />
+              </StaticMerge>
+            ) : null}
           </group>
         );
       })}
@@ -466,15 +493,16 @@ const AVOID3 = [[0, -70, 4]];
 export function Decorations() {
   return (
     <group>
+      <Windmill position={[-5, 0, -40]} />
+      <House position={[7.2, 0, 5.5]} rotation={-0.9} />
+      <StaticMerge>
       {/* 島1 */}
       <Tree position={[-8, 0, 3]} seed={3} />
       <Tree position={[-4, 0, 9]} seed={5} color="#bfe6ff" />
       <Tree position={[-2.5, 0, -9]} seed={8} color="#fff0a8" scale={0.9} />
       <Tree position={[-9, 0, -1]} seed={9} scale={0.8} />
-      <House position={[7.2, 0, 5.5]} rotation={-0.9} />
       <Flowers center={[0, 0, 0]} radius={9.5} count={40} seed={11} avoid={AVOID1} />
       {/* 島2 */}
-      <Windmill position={[-5, 0, -40]} />
       <Tree position={[6, 0, -39]} seed={12} color="#c4a8ff" />
       <Tree position={[-7.5, 0, -28.5]} seed={13} color="#ffc2dc" scale={0.85} />
       <Flowers center={[0, 0, -34]} radius={8.5} count={30} seed={21} />
@@ -483,6 +511,7 @@ export function Decorations() {
       <Tree position={[-6.5, 0, -72]} seed={19} color="#fff0a8" scale={0.85} />
       <Flowers center={[0, 0, -70]} radius={8} count={24} seed={31} avoid={AVOID3} />
       <Rainbow position={[-38, -10, -55]} rotation={[0, Math.PI / 2.6, 0]} radius={26} />
+      </StaticMerge>
     </group>
   );
 }

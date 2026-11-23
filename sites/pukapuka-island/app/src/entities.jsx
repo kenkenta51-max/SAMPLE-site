@@ -3,6 +3,7 @@ import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ModelSlot } from './models/glb.jsx';
+import StaticMerge from './StaticMerge.jsx';
 import { HeroToy, FairyToy, PomuToy, ChikuToy, BossToy } from './models/toys.jsx';
 import { GATE, BOSS_POS } from './level.js';
 import { store } from './store.js';
@@ -44,12 +45,13 @@ export function Items({ world }) {
       if (!g) continue;
       g.visible = !it.taken;
       g.rotation.y = t * (it.type === 'star' ? 1.6 : 2.2) + it.id;
-      g.position.y = it.pos[1] + Math.sin(t * 2.4 + it.id) * 0.12;
+      g.position.set(it.pos[0], it.pos[1] + (it.pull ? 0 : Math.sin(t * 2.4 + it.id) * 0.12), it.pos[2]);
     }
   });
   return world.items.map((it) => (
     <group key={it.id} ref={(el) => (refs.current[it.id] = el)} position={it.pos}>
       {it.type === 'drop' && (
+        <StaticMerge>
         <group scale={0.85}>
           <mesh position={[0, -0.05, 0]}>
             <sphereGeometry args={[0.2, 14, 10]} />
@@ -64,6 +66,7 @@ export function Items({ world }) {
             <meshBasicMaterial color="#ffffff" />
           </mesh>
         </group>
+        </StaticMerge>
       )}
       {it.type === 'star' && (
         <group scale={1.5}>

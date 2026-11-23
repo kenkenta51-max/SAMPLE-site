@@ -15,8 +15,8 @@ export const worldRef = { current: null };
 export default function Scene() {
   const world = useMemo(() => createWorld(), []);
   worldRef.current = world;
-  if (typeof window !== 'undefined') window.__pukapuka = world; // デバッグ用
   const { camera, gl, size } = useThree();
+  if (typeof window !== 'undefined') window.__pukapuka = world; // デバッグ・自動テスト用
   const sun = useRef();
   const tgt = useMemo(() => new THREE.Vector3(0, 1.2, 7), []);
   const camPos = useMemo(() => new THREE.Vector3(0, 6, 16), []);
@@ -33,7 +33,10 @@ export default function Scene() {
   }, [world]);
 
   useFrame((_, rawDt) => {
-    const frameDt = Math.min(rawDt, 0.1);
+    // 星のかけらを取った瞬間は少しだけスローモーション
+    const slow = world.slowmo > 0 ? 0.3 : 1;
+    world.slowmo = Math.max(0, world.slowmo - Math.min(rawDt, 0.1));
+    const frameDt = Math.min(rawDt, 0.1) * slow;
     const dt = Math.min(frameDt, 1 / 30);
     const s = store.get();
     const portrait = size.width < size.height;
@@ -98,7 +101,7 @@ export default function Scene() {
       tgt.x += (pl.pos[0] - tgt.x) * k;
       tgt.z += (pl.pos[2] - tgt.z) * k;
       tgt.y += (pl.pos[1] + 1.2 - tgt.y) * Math.min(1, dt * 4.5);
-      const d = s.phase === 'title' ? dist + 6 : dist;
+      const d = (s.phase === 'title' ? dist + 6 : dist) * (c.zoom || 1);
       const p = s.phase === 'title' ? 0.35 : c.pitch;
       camPos.set(
         tgt.x + Math.sin(c.yaw) * Math.cos(p) * d,
@@ -107,6 +110,12 @@ export default function Scene() {
       );
     }
     camera.position.copy(camPos);
+    // ボス登場のときは画面がゆれる
+    if (s.phase === 'clearing' && world.clearT > 0.9 && world.clearT < 2.6) {
+      const amp = 0.18 * (1 - (world.clearT - 0.9) / 1.7);
+      camera.position.x += (Math.random() - 0.5) * amp;
+      camera.position.y += (Math.random() - 0.5) * amp;
+    }
     look.copy(tgt);
     camera.lookAt(look);
 

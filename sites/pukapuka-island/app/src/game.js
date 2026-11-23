@@ -24,7 +24,7 @@ export function createWorld() {
     active: true,
     squash: 0,
   }));
-  const items = ITEMS.map((it, i) => ({ ...it, id: i, taken: false }));
+  const items = ITEMS.map((it, i) => ({ ...it, pos: [...it.pos], home: [...it.pos], id: i, taken: false, pull: false }));
   const enemies = ENEMIES.map((e, i) => ({
     ...e,
     id: i,
@@ -62,6 +62,7 @@ export function createWorld() {
     },
     cam: { yaw: 0, pitch: 0.42, lastManual: -10, target: [0, 1, 7] },
     fx: { burst: () => {} },
+    slowmo: 0,
   };
 }
 
@@ -226,7 +227,8 @@ function updatePlayer(w, dt, inp) {
     pl.jumpCut = true;
   }
 
-  vel[1] = Math.max(vel[1] - PLAYER.gravity * dt, -30);
+  // 落ちるときは少し速く（ふわっと上がって、ストンと落ちる）
+  vel[1] = Math.max(vel[1] - PLAYER.gravity * (vel[1] < 0 ? 1.22 : 1) * dt, -30);
 
   // 横方向の移動と壁
   pos[0] += vel[0] * dt;
@@ -304,6 +306,12 @@ function updatePlayer(w, dt, inp) {
   const hs = Math.hypot(vel[0], vel[2]);
   a.run += ((pl.ground ? Math.min(1, hs / PLAYER.speed) : 0) - a.run) * Math.min(1, dt * 10);
   a.phase += dt * (6 + hs * 1.6);
+  // 走るとき足元に小さな土けむり
+  pl.dustT = (pl.dustT || 0) - dt;
+  if (pl.ground && hs > 4.5 && pl.dustT <= 0) {
+    pl.dustT = 0.11;
+    w.fx.burst([pos[0], pos[1] + 0.05, pos[2]], '#ffffff', 1, { speed: 0.8, size: 0.13, gravity: -0.5, life: 0.45 });
+  }
   a.air = !pl.ground;
   a.squash += (0 - a.squash) * Math.min(1, dt * 9);
   a.flip = Math.max(0, a.flip - dt * 2.6);
@@ -361,8 +369,16 @@ function updatePickups(w) {
   for (const it of w.items) {
     if (it.taken) continue;
     const dx = pl.pos[0] - it.pos[0], dy = cy - it.pos[1], dz = pl.pos[2] - it.pos[2];
+    const d2 = dx * dx + dy * dy + dz * dz;
+    // しずくは近づくと吸いよせられる
+    if (it.type === 'drop' && (it.pull || d2 < 2.3 * 2.3)) {
+      it.pull = true;
+      const d = Math.sqrt(d2) || 1;
+      const k = Math.min(1, (12 / d) * (1 / 60));
+      it.pos[0] += dx * k; it.pos[1] += dy * k; it.pos[2] += dz * k;
+    }
     const r = it.type === 'star' ? 1.4 : 1.05;
-    if (dx * dx + dy * dy + dz * dz > r * r) continue;
+    if (d2 > r * r) continue;
     const s = store.get();
     if (it.type === 'heart') {
       if (s.hearts >= s.maxHearts) continue;
@@ -378,6 +394,9 @@ function updatePickups(w) {
       store.set({ stars });
       sfx('star');
       w.fx.burst(it.pos, '#ffe066', 30, { speed: 5, size: 0.26, gravity: 2 });
+      w.fx.burst(it.pos, '#ffffff', 16, { speed: 7, size: 0.14, gravity: 0, life: 0.5 });
+      w.slowmo = 0.45;
+      store.banner(`星のかけら ${stars}/3`);
       store.hint(
         stars < 3
           ? `星のかけら ゲット！ あと ${3 - stars}こ！`
