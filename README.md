@@ -1,6 +1,6 @@
 # Sample Site
 
-26件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+27件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全26サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全27サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -129,3 +129,13 @@ JavaScript構文・82項目の機能検査・コレクションのビルドと�
 
 ポッケの制作データ一式： https://kenkenta51-max.github.io/SAMPLE-site/sites/pokke-after-school/download.html
 単体HTML・編集用ソース・生成画像の原寸データ・仕様書・再構築ツールをZIPに収録しています。
+
+## ぷかぷか島のスターしずく（3Dアクション体験版）の追加
+
+`sites/pukapuka-island/` に、空にうかぶ島をジャンプでわたるオリジナルの3Dアクションゲームの体験版を追加しました。React・Three.js・React Three Fiberで作り、PCとスマートフォン（画面上のスティックとボタン）で遊べます。島3つ、2段ジャンプ、動く足場・くずれる足場・バネ・回転床、踏んで倒す敵と避ける敵、チェックポイント、ヒント会話、クリア演出を含みます。
+
+キャラは仮モデルです。Tripoなどで作ったGLBを `models/` に置くと自動で差し替わります。キャラ設定・Tripo用プロンプト・差し替え手順は `sites/pukapuka-island/README.md` にまとめています。
+
+ソースは `sites/pukapuka-island/app/`、公開用ビルドは `sites/pukapuka-island/dist/` です（`cd sites/pukapuka-island/app && npm install && npm run build` で再ビルド）。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pukapuka-island/

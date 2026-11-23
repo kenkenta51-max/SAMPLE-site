@@ -192,5 +192,13 @@
     "source_commit": null,
     "original_url": null,
     "public_directory": "."
+  },
+  {
+    "slug": "pukapuka-island",
+    "title": "ぷかぷか島のスターしずく（3Dアクション体験版）",
+    "source_repository": "kenkenta51-max/SAMPLE-site",
+    "source_commit": null,
+    "original_url": null,
+    "public_directory": "dist"
   }
 ]

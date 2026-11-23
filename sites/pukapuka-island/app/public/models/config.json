@@ -1,0 +1,9 @@
+{
+  "_説明": "Tripoで作ったGLBをこのフォルダに置くと、仮モデルの代わりに自動で表示されます。height=ゲーム内の高さ(m)、rotationY=向きの補正(度)、scale=微調整の倍率、offset=[x,y,z]の位置補正。ファイルがなければ仮モデルのままです。",
+  "hero": { "file": "hero.glb", "height": 1.15, "rotationY": 0 },
+  "fairy": { "file": "fairy.glb", "height": 0.7, "rotationY": 0 },
+  "pomu": { "file": "pomu.glb", "height": 1.0, "rotationY": 0 },
+  "chiku": { "file": "chiku.glb", "height": 1.1, "rotationY": 0 },
+  "boss": { "file": "boss.glb", "height": 4, "rotationY": 0 },
+  "house": { "file": "house.glb", "height": 3.2, "rotationY": 0 }
+}
