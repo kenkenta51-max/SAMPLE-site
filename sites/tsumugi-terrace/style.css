@@ -173,3 +173,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .card-photo { aspect-ratio: 16 / 9; }
   .disclaimer { left: 16px; right: auto; bottom: 8px; }
 }
+
+/* 見た目の切り替え（ミニチュア・雨） */
+.fx { position: fixed; z-index: 10; right: 28px; top: 74px; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.fx button { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; color: var(--muted); transition: background .25s, color .25s; }
+.fx button.on { background: var(--accent); color: #1a1407; font-weight: 700; }
+.disclaimer a { color: inherit; margin-left: 6px; }
+@media (max-width: 760px) {
+  .fx { right: 12px; top: 112px; }
+  .fx button { padding: 6px 11px; font-size: 11px; }
+}
