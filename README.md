@@ -1,6 +1,6 @@
 # Sample Site
 
-28件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
+29件のサンプルサイト・ブラウザゲームを、1つのリポジトリで管理します。
 
 **公開URL:** https://kenkenta51-max.github.io/SAMPLE-site/
 
@@ -39,7 +39,7 @@ http://localhost:8000/SAMPLE-site/ を開きます。2回目以降、シンボ�
 
 ## 公開設定
 
-GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全28サイトが1つのPagesサイトとして公開されます。
+GitHubの Settings → Pages → Build and deployment → Source で **GitHub Actions** を選択します。公開ワークフローを実行すると、一覧ページと全29サイトが1つのPagesサイトとして公開されます。
 
 サイトの公開URLは `https://kenkenta51-max.github.io/SAMPLE-site/sites/<サイト名>/` です。
 
@@ -160,3 +160,29 @@ JavaScript構文・82項目の機能検査・コレクションのビルドと�
 ソースは `sites/pukapuka-island/app/`、公開用ビルドは `sites/pukapuka-island/dist/` です（`cd sites/pukapuka-island/app && npm install && npm run build` で再ビルド）。
 
 公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/pukapuka-island/
+
+## つむぎテラス（3Dショッピングモール フロアガイド）の追加
+
+`sites/tsumugi-terrace/` に、駅前にある架空のショッピングモール「つむぎテラス」の3Dフロアガイドを追加しました。Three.jsで作っています。フロアを選ぶと上の階と屋根が持ち上がって消え、店内が見えます。
+
+- 店舗をクリックすると、写真・営業時間付きのカードが開きます
+- 「ベビーカーで行くルート」を押すと、南口からエレベーター経由でお店までの道が光ります（上下の階をまたいで表示）
+- セール中・授乳室・多目的トイレ・テナント募集で絞り込めます
+- 屋上庭園・駐車場の空き（北口にいちばん近い空き）・ストリートの各ビューがあります
+
+店舗写真32枚は、Geminiの画像生成モデル（Nano Banana Pro）で作ったイメージです。three.jsは `vendor/` に同梱しているため、ビルドは不要です。
+
+3Dの見た目は、無料で使える素材を組み合わせています。
+
+- 車と歩く人は Khronos glTF Sample Assets のモデル（CC BY 4.0）です
+- 街灯・ベンチ・植栽、レンガや路面の質感、夜景の環境光は Poly Haven（CC0）です
+- 建物の窓には、店舗写真を並べた帯（`img/win/`）を貼っています
+- 右上の「ミニチュア」で、画面の上下をぼかしたジオラマ風の表示を切り替えます（最初からオン）
+- 「雨」で、雨と濡れた路面の映り込みを切り替えます
+- スマホでは、影・映り込み・人数を減らした軽量設定で動きます
+
+クレジットは `credits.html`（元は `CREDITS.md`）にまとめています。
+
+`?demo=1` を付けると自動デモが流れます（`?demo=short` は15秒版）。`?capture=1` は、1コマずつ書き出す録画用のモードです。店舗データは `data.js` で編集できます。
+
+公開URL: https://kenkenta51-max.github.io/SAMPLE-site/sites/tsumugi-terrace/
