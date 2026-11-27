@@ -9,7 +9,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { SHOPS, FLOORS, FACILITIES, CATEGORY, STATS } from './data.js';
+import { SHOPS, FLOORS, FACILITIES, CATEGORY, STATS, SPOTS, FACILITY_INFO } from './data.js';
 
 // ------------------------------------------------------------------
 // 基本設定
@@ -107,6 +107,11 @@ const skyTex = canvasTex(4, 512, (g, w, h) => {
   grd.addColorStop(1, '#2b2742');
   g.fillStyle = grd; g.fillRect(0, 0, w, h);
 });
+const skyDayTex = canvasTex(4, 512, (g, w, h) => {
+  const grd = g.createLinearGradient(0, 0, 0, h);
+  grd.addColorStop(0, '#3f7fd0'); grd.addColorStop(0.5, '#8fbdea'); grd.addColorStop(0.85, '#d5e6f5'); grd.addColorStop(1, '#eef3f6');
+  g.fillStyle = grd; g.fillRect(0, 0, w, h);
+});
 scene.background = skyTex;
 
 const glowTex = canvasTex(128, 128, (g, w, h) => {
@@ -150,6 +155,10 @@ const cityTex = canvasTex(256, 512, (g, w, h) => {
   g.globalAlpha = 1;
 }, { repeat: [1, 1] });
 
+const cityDayTex = canvasTex(256, 512, (g, w, h) => {
+  g.fillStyle = '#c9cfd6'; g.fillRect(0, 0, w, h);
+  for (let y = 6; y < h; y += 14) for (let x = 6; x < w; x += 12) { g.fillStyle = rand() < 0.5 ? '#7f97b3' : '#95abc4'; g.fillRect(x, y, 7, 9); }
+}, { repeat: [1, 1] });
 const marbleTex = canvasTex(256, 256, (g, w, h) => {
   g.fillStyle = '#d9d2c4'; g.fillRect(0, 0, w, h);
   for (let i = 0; i < 40; i++) { g.fillStyle = `rgba(150,140,125,${rand() * 0.12})`; g.fillRect(rand() * w, rand() * h, rand() * 80, rand() * 3 + 1); }
@@ -234,10 +243,12 @@ function plane(w, d, mat, x, y, z, parent) {
   parent && parent.add(m);
   return m;
 }
+const glowMats = [];   // 夜の光だまり（昼は消す）
+const winMats = [];    // 窓（昼は控えめに光らせる）
 function glowPool(color, size, x, y, z, parent, opacity = 0.5) {
   const mat = new THREE.MeshBasicMaterial({ map: glowTex, color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
   const m = plane(size, size, mat, x, y, z, parent);
-  m.userData.noFade = false;
+  mat.userData.glow = opacity; glowMats.push(mat);
   return m;
 }
 function rectsAround(x0, x1, z0, z1, h) {
@@ -257,16 +268,22 @@ scene.add(world);
 // ---- 外部モデル・環境光の読み込み（失敗しても簡易版で続行）
 const gltfLoader = new GLTFLoader();
 async function loadModel(name) { try { return await gltfLoader.loadAsync(`models/${name}.glb`); } catch (e) { console.warn('model skipped', name); return null; } }
-const [carGltf, carLoGltf, personGltf, lampGltf, benchGltf, planterGltf, plantGltf, tableGltf, binGltf, envTex] = await Promise.all([
-  loadModel('car'), LITE ? null : loadModel('car-lo'), loadModel('person'), loadModel('street_lamp_01'), loadModel('modular_street_seating'),
+const [carGltf, carLoGltf, lampGltf, benchGltf, planterGltf, plantGltf, tableGltf, binGltf, envTex, envDayTex, ...personGltfsRaw] = await Promise.all([
+  loadModel('car'), LITE ? null : loadModel('car-lo'), loadModel('street_lamp_01'), loadModel('modular_street_seating'),
   loadModel('planter_box_01'), loadModel('potted_plant_04'), loadModel('outdoor_table_chair_set_01'), loadModel('metal_trash_can'),
   new RGBELoader().loadAsync('tex/night.hdr').catch(() => null),
+  new RGBELoader().loadAsync('tex/day.hdr').catch(() => null),
+  loadModel('p1'), loadModel('p2'), loadModel('p3'), loadModel('p4'), loadModel('p5'),
 ]);
-if (envTex) {
+const personGltfs = personGltfsRaw.filter((g) => g && g.animations.length);
+const env = { night: null, day: null };
+{
   const pm = new THREE.PMREMGenerator(renderer);
-  if (!params.has('noenv')) scene.environment = pm.fromEquirectangular(envTex).texture;
+  if (envTex && !params.has('noenv')) { env.night = pm.fromEquirectangular(envTex).texture; envTex.dispose(); }
+  if (envDayTex && !params.has('noenv')) { env.day = pm.fromEquirectangular(envDayTex).texture; envDayTex.dispose(); }
+  pm.dispose();
+  scene.environment = env.night;
   scene.environmentIntensity = 0.22;
-  envTex.dispose(); pm.dispose();
 }
 // モデルを同じ形のまま大量に置く（InstancedMesh）
 // 透過ガラスは画面全体を二重に描くので、軽い半透明に置き換える
@@ -284,7 +301,15 @@ function scatter(gltf, placements, parent, { scale = 1, tintPaint = false } = {}
     if (!node.isMesh) return;
     const mat = node.material.clone();
     const paint = tintPaint && /^Paint/.test(node.material.name);
-    if (paint) mat.color.set(0xffffff);
+    if (tintPaint) {
+      const n = node.material.name || '';
+      mat.emissive.set(0x000000); mat.emissiveIntensity = 0; mat.envMapIntensity = 0.7;
+      if (paint) { mat.color.set(0xffffff); mat.metalness = 0.45; mat.roughness = 0.38; }
+      else if (/^Tire/.test(n) || n === '') { mat.color.set(0x121212); mat.metalness = 0; mat.roughness = 0.9; }
+      else if (/^Rim/.test(n)) { mat.color.set(0x8f9298); mat.metalness = 0.7; mat.roughness = 0.45; }
+      else if (n === 'Headlight') { mat.color.set(0xcfd3d8); mat.metalness = 0.2; mat.roughness = 0.3; }
+      else if (n === 'Brakelight') { mat.color.set(0x5a1010); mat.metalness = 0.1; mat.roughness = 0.4; }
+    }
     const im = new THREE.InstancedMesh(node.geometry, mat, placements.length);
     placements.forEach((p, i) => {
       o.position.set(p.x, p.y || 0, p.z); o.rotation.set(0, p.ry || 0, 0); o.scale.setScalar((p.s || 1) * scale); o.updateMatrix();
@@ -298,7 +323,8 @@ function scatter(gltf, placements, parent, { scale = 1, tintPaint = false } = {}
   return out;
 }
 
-scene.add(new THREE.HemisphereLight(0x8ea4d8, 0x1a140e, 0.4));
+const hemi = new THREE.HemisphereLight(0x8ea4d8, 0x1a140e, 0.4);
+scene.add(hemi);
 const moon = new THREE.DirectionalLight(0xaac4ff, 1.15);
 moon.position.set(-110, 170, -90);
 moon.castShadow = true;
@@ -310,7 +336,8 @@ const warm = new THREE.DirectionalLight(0xffb36b, 0.25);
 warm.position.set(80, 40, -120);
 scene.add(warm);
 
-plane(2400, 2400, std({ color: 0x0c0e12, roughness: 1 }), 0, -0.02, 0, world);
+const groundMat = pbr('concrete_pavers', 6, { color: 0x1a1c20 });
+plane(2400, 2400, groundMat, 0, -0.02, 0, world);
 // 歩道（建物の周り）
 plane(150, 90, pbr('large_floor_tiles_02', 5, { color: 0x8d8d92, wet: true }), 0, 0.0, -2, world);
 // 道路（南側）
@@ -381,7 +408,8 @@ for (let z = -26; z <= 30; z += 12) { tree(-68, z, 1); tree(68, z, 1.05); }
   box(7, 0.2, 2.2, poleMat, 0, 2.8, 0, sh);
   for (const x of [-3.3, 3.3]) box(0.12, 2.8, 0.12, poleMat, x, 1.4, -0.9, sh);
   box(6.6, 2.2, 0.06, std({ color: 0x9ccaff, transparent: true, opacity: 0.2 }), 0, 1.5, 0.9, sh);
-  box(1.6, 2.2, 0.15, new THREE.MeshBasicMaterial({ color: 0xffe9c4, toneMapped: false }), 2.4, 1.4, 0.95, sh);
+  const adTex = texLoader.load('img/s305.jpg'); adTex.colorSpace = THREE.SRGBColorSpace;
+  box(1.6, 2.2, 0.15, std({ color: 0x111111, emissive: 0xffffff, emissiveMap: adTex, emissiveIntensity: 0.8 }), 2.4, 1.4, 0.95, sh);
   box(4, 0.4, 0.6, std({ color: 0x5b3b26 }), -0.8, 0.5, 0.4, sh);
   glowPool(0xffe2b8, 9, 0, 0.05, 0, sh, 0.35);
   sh.position.set(-26, 0, -39.2);
@@ -394,6 +422,7 @@ for (let z = -26; z <= 30; z += 12) { tree(-68, z, 1); tree(68, z, 1.05); }
   const geo = new THREE.BoxGeometry(1, 1, 1);
   geo.translate(0, 0.5, 0);
   const mat = std({ color: 0x0b0d13, emissive: 0xffffff, emissiveMap: cityTex, emissiveIntensity: 0.55, map: cityTex });
+  world.userData.cityMat = mat;
   const city = new THREE.InstancedMesh(geo, mat, N);
   const o = new THREE.Object3D();
   for (let i = 0; i < N; i++) {
@@ -554,47 +583,86 @@ const spaces = [];
 // 歩く人
 // ------------------------------------------------------------------
 const walkers = [];
-const CLOTHES = [0xffffff, 0xf2e6d6, 0xc9d6ee, 0xf0c8c0, 0xcfe6c8, 0xf3e2b0, 0xd0d0dc, 0xb9c8e0, 0xe6d4c2];
-const PERSON_YAW = Math.PI / 2;
-function addWalkers(parent, pts, n, { y = 0, speed = 1.25, lateral = 0.8 } = {}) {
-  if (!personGltf || !personGltf.animations.length) return;
+const SHIRTS = [0xf2f0ea, 0x2f4a7a, 0x9c2f34, 0x3e6b4a, 0xe0b24a, 0x1f2126, 0xcfd8e6, 0x7a5aa0, 0xd98a5a, 0x5fa3b8, 0xf0c9d2, 0x8a8f99];
+const PANTS = [0x23262d, 0x2c3a55, 0x4a4033, 0x6b6f78, 0xb9a98c, 0x1b2b3c, 0x3a3a3a];
+const HAIRS = [0x15110f, 0x2a1c14, 0x3b2a1c, 0x5a4030, 0x1c1c1c, 0x8a8a8a];
+const SKINS = [0xf0cfb0, 0xe8bf9a, 0xd9a982, 0xf3d6bd];
+const pick = (a) => a[Math.floor(rand() * a.length)];
+const STRIDE = 1.45;      // 歩きアニメ1周で進む距離（足がすべらない速さに合わせる）
+// 通路の「道」を内側/外側に平行移動して、ひとりずつ自分のレーンを歩かせる
+function offsetLoop(pts, off) {
+  const n = pts.length;
+  return pts.map((p, i) => {
+    const a = pts[(i + n - 1) % n], b = pts[(i + 1) % n];
+    const d1 = new THREE.Vector2(p[0] - a[0], p[1] - a[1]).normalize(), d2 = new THREE.Vector2(b[0] - p[0], b[1] - p[1]).normalize();
+    return new THREE.Vector2(p[0] + (d1.y + d2.y) * off, p[1] - (d1.x + d2.x) * off);
+  });
+}
+function addWalkers(parent, pts, n, { y = 0, speed = 1.25, lateral = 0.6 } = {}) {
+  if (!personGltfs.length) return;
   if (LITE) n = Math.ceil(n / 3);
   for (let i = 0; i < n; i++) {
-    const body = SkeletonUtils.clone(personGltf.scene);
+    const src = pick(personGltfs);
+    const body = SkeletonUtils.clone(src.scene);
+    const cols = { Shirt: pick(SHIRTS), Pants: pick(PANTS), Hair: pick(HAIRS), Skin: pick(SKINS), Black: pick([0x1f2126, 0x2c3a55, 0x4a4a52]) };
+    const own = new Map();
     body.traverse((o) => {
       if (!o.isMesh) return;
-      o.material = o.material.clone(); o.material.color.set(CLOTHES[Math.floor(rand() * CLOTHES.length)]);
+      const name = o.material.name;
+      if (!own.has(name)) { const m = o.material.clone(); m.side = THREE.FrontSide; m.roughness = 0.85; m.metalness = 0; if (cols[name] !== undefined) m.color.set(cols[name]); own.set(name, m); }
+      o.material = own.get(name);
       o.castShadow = true; o.frustumCulled = false;
     });
-    body.rotation.y = PERSON_YAW;
-    body.scale.setScalar(1.05 + rand() * 0.14);
+    body.scale.multiplyScalar(0.5 + rand() * 0.045);
     const holder = new THREE.Group(); holder.add(body); parent.add(holder);
     const mixer = new THREE.AnimationMixer(body);
-    mixer.clipAction(personGltf.animations[0]).play();
-    mixer.setTime(rand() * 2);
-    const route = (rand() < 0.5 ? pts : [...pts].reverse()).map(([x, z]) => new THREE.Vector2(x, z));
+    mixer.clipAction(src.animations.find((a) => a.name === 'Walk') || src.animations[0]).play();
+    mixer.setTime(rand());
+    const off = (rand() - 0.5) * 2 * lateral;
+    const route = offsetLoop(rand() < 0.5 ? pts : [...pts].reverse(), off);
     const segs = route.map((a, k) => a.distanceTo(route[(k + 1) % route.length]));
     const total = segs.reduce((a, b) => a + b, 0);
-    const w = { holder, mixer, route, segs, total, dist: rand() * total, speed: speed * (0.8 + rand() * 0.45), off: (rand() - 0.5) * 2 * lateral, y, parent };
-    walkers.push(w); placeWalker(w);
+    const w = { holder, mixer, route, segs, total, dist: rand() * total, speed: speed * (0.85 + rand() * 0.3), y, parent, yaw: null };
+    walkers.push(w); placeWalker(w, 1);
   }
 }
-function placeWalker(w) {
+function placeWalker(w, dt) {
   let d = w.dist % w.total, k = 0;
   while (d > w.segs[k]) { d -= w.segs[k]; k = (k + 1) % w.segs.length; }
-  const a = w.route[k], b = w.route[(k + 1) % w.route.length];
-  const dx = (b.x - a.x) / w.segs[k], dz = (b.y - a.y) / w.segs[k];
-  w.holder.position.set(a.x + dx * d + dz * w.off, w.y, a.y + dz * d - dx * w.off);
+  const n = w.route.length, a = w.route[k], b = w.route[(k + 1) % n], c = w.route[(k + 2) % n];
+  let dx = (b.x - a.x) / w.segs[k], dz = (b.y - a.y) / w.segs[k];
+  let px = a.x + dx * d, pz = a.y + dz * d;
+  // 角は丸く曲がる（急に向きが変わらないように）
+  const R = Math.min(1.6, w.segs[k] / 2, w.segs[(k + 1) % n] / 2), rest = w.segs[k] - d;
+  if (rest < R) {
+    const nx = (c.x - b.x) / w.segs[(k + 1) % n], nz = (c.y - b.y) / w.segs[(k + 1) % n];
+    const t = 0.5 * (1 - rest / R);                 // 0 → 0.5
+    const qx = b.x - dx * R, qz = b.y - dz * R, rx = b.x + nx * R, rz = b.y + nz * R, u = t;
+    px = (1 - u) * (1 - u) * qx + 2 * u * (1 - u) * b.x + u * u * rx;
+    pz = (1 - u) * (1 - u) * qz + 2 * u * (1 - u) * b.y + u * u * rz;
+    dx = dx * (1 - t) + nx * t; dz = dz * (1 - t) + nz * t;
+  } else if (d < R) {
+    const p = w.route[(k + n - 1) % n], pl = w.segs[(k + n - 1) % n];
+    const ox = (a.x - p.x) / pl, oz = (a.y - p.y) / pl;
+    const u = 0.5 + 0.5 * (d / R);                  // 0.5 → 1
+    const qx = a.x - ox * R, qz = a.y - oz * R, rx = a.x + dx * R, rz = a.y + dz * R;
+    px = (1 - u) * (1 - u) * qx + 2 * u * (1 - u) * a.x + u * u * rx;
+    pz = (1 - u) * (1 - u) * qz + 2 * u * (1 - u) * a.y + u * u * rz;
+    const t = 1 - u; dx = dx * (1 - t) + ox * t; dz = dz * (1 - t) + oz * t;
+  }
+  w.holder.position.set(px, w.y, pz);
   const want = Math.atan2(dx, dz);
-  let diff = want - w.holder.rotation.y; diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-  w.holder.rotation.y += diff * 0.2;
+  if (w.yaw === null) w.yaw = want;
+  let diff = want - w.yaw; diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+  w.yaw += diff * Math.min(1, dt * 8);
+  w.holder.rotation.y = w.yaw;
 }
 function updateWalkers(dt) {
   for (const w of walkers) {
     if (!w.parent.visible) continue;
     w.dist += w.speed * dt;
-    placeWalker(w);
-    w.mixer.update(dt * w.speed / 1.15);
+    placeWalker(w, dt);
+    w.mixer.update(dt * w.speed / STRIDE);
   }
 }
 
@@ -604,15 +672,15 @@ scatter(benchGltf, [-54, -38, -22, 22, 38, 54].map((x) => ({ x, z: -33.2, ry: Ma
 scatter(planterGltf, [-14, -11.5, 11.5, 14, -46, -30, 30, 46].map((x) => ({ x, z: -31.4, s: 2.6 })), world);
 scatter(plantGltf, [-14, -11.5, 11.5, 14, -46, -30, 30, 46].map((x) => ({ x, y: 1.0, z: -31.4, ry: rand() * 6, s: 6 })), world);
 scatter(binGltf, [-18, 18, -60, 60].map((x) => ({ x, z: -32.6, ry: Math.PI })), world);
-addWalkers(world, [[-120, -33.8], [120, -33.8], [120, -36.2], [-120, -36.2]], 22, { lateral: 0.9 });
-addWalkers(world, [[-90, ROAD_Z - 10.2], [90, ROAD_Z - 10.2], [90, ROAD_Z - 12.2], [-90, ROAD_Z - 12.2]], 8, { lateral: 0.5 });
-addWalkers(world, [[-3, -30], [3, -30], [3, ROAD_Z - 9], [-3, ROAD_Z - 9]], 6, { lateral: 2.2 });
-addWalkers(parking, [[-50, 34.5], [50, 34.5], [50, 37], [-50, 37]], 6, {});
+addWalkers(world, [[-120, -34.5], [120, -34.5], [120, -36.2], [-120, -36.2]], 22, { lateral: 0.4 });
+addWalkers(world, [[-90, ROAD_Z - 11.3], [90, ROAD_Z - 11.3], [90, ROAD_Z - 12.8], [-90, ROAD_Z - 12.8]], 8, { lateral: 0.3 });
+addWalkers(world, [[-7, -31.6], [7, -31.6], [7, -33.4], [-7, -33.4]], 4, { lateral: 0.3, speed: 0.9 });
+addWalkers(parking, [[-50, 33.6], [50, 33.6], [50, 37.6], [-50, 37.6]], 6, { lateral: 0.5 });
 
 // ------------------------------------------------------------------
 // 雨・ミニチュア風の切り替え
 // ------------------------------------------------------------------
-const fx = { mini: true, rain: false };
+const fx = { mini: true, rain: false, day: false };
 const RAIN_N = LITE ? 1400 : 5000;
 const rainPos = new Float32Array(RAIN_N * 6);
 const rainSeed = new Float32Array(RAIN_N * 3);
@@ -631,14 +699,40 @@ function updateRain(t) {
   }
   rainGeo.attributes.position.needsUpdate = true;
 }
+const lampBase = new THREE.Color(0xfff1d6);
+function applyAtmosphere() {
+  const day = fx.day, wet = fx.rain;
+  scene.background = day ? skyDayTex : skyTex;
+  scene.fog.color.set(day ? (wet ? 0x9aa6b3 : 0xc2d6ea) : 0x0b1020);
+  scene.fog.density = day ? (wet ? 0.0036 : 0.0011) : (wet ? 0.0058 : 0.0042);
+  scene.environment = day ? (env.day || env.night) : env.night;
+  scene.environmentIntensity = day ? (wet ? 0.55 : 0.8) : (wet ? 0.34 : 0.22);
+  hemi.color.set(day ? 0xdbe9ff : 0x8ea4d8); hemi.groundColor.set(day ? 0x8a8275 : 0x1a140e); hemi.intensity = day ? (wet ? 0.9 : 1.1) : 0.4;
+  moon.color.set(day ? 0xfff0dc : 0xaac4ff); moon.intensity = day ? (wet ? 0.9 : 3.0) : 1.15;
+  warm.intensity = day ? 0 : 0.25;
+  renderer.toneMappingExposure = day ? 0.92 : 1.05;
+  bloom.strength = day ? 0.1 : 0.42;
+  groundMat.color.set(day ? 0x7c8388 : 0x1a1c20);
+  const k = day ? 0.04 : 1;
+  for (const m of glowMats) { m.opacity = m.userData.glow * k; if (m.userData.base !== undefined) m.userData.base = m.opacity; }
+  for (const m of winMats) m.emissiveIntensity = day ? 0.38 : 0.7;
+  lampMat.color.copy(lampBase).multiplyScalar(day ? 0.55 : 1);
+  const city = world.userData.cityMat;
+  if (city) { city.map = day ? cityDayTex : cityTex; city.emissiveIntensity = day ? 0 : 0.55; city.color.set(day ? 0xffffff : 0x0b0d13); city.needsUpdate = true; }
+  rain.material.color.set(day ? 0xe8eef6 : 0xb9cdf0);
+}
 function setRain(on) {
   fx.rain = on;
   rain.visible = on;
   if (wetMirror) { wetMirror.visible = on; roadMat.transparent = on; roadMat.opacity = on ? 0.55 : 1; roadMat.depthWrite = !on; roadMat.needsUpdate = true; }
   for (const m of wetMats) { m.roughness = on ? 0.28 : 1; m.metalness = on ? 0.35 : 0.05; }
-  scene.fog.density = on ? 0.0058 : 0.0042;
-  scene.environmentIntensity = on ? 0.34 : 0.22;
+  applyAtmosphere();
   document.querySelectorAll('[data-fx="rain"]').forEach((b) => b.classList.toggle('on', on));
+}
+function setDay(on) {
+  fx.day = on;
+  applyAtmosphere();
+  document.querySelectorAll('[data-fx="day"]').forEach((b) => { b.classList.toggle('on', on); b.textContent = on ? '昼' : '夜'; });
 }
 function setMini(on) { fx.mini = on; document.querySelectorAll('[data-fx="mini"]').forEach((b) => b.classList.toggle('on', on)); }
 
@@ -818,8 +912,8 @@ function buildFloor(f) {
   for (let i = 0; i <= 5; i++) for (const z of [-6.25, 6.25]) pots.push({ x: -44 + 17.6 * i + (i === 0 ? 0.8 : i === 5 ? -0.8 : 0), y, z, ry: rand() * 6, s: 6.5 });
   scatter(plantGltf, pots, g);
   if (f === 0) scatter(benchGltf, [-24, 0, 24].map((x) => ({ x, y, z: 0, ry: 0 })), g);
-  const loop = f === 0 ? [[-41, -3.6], [41, -3.6], [41, 3.6], [-41, 3.6]] : [[-42, -5.2], [42, -5.2], [42, 5.2], [-42, 5.2]];
-  addWalkers(g, loop, f === 0 ? 14 : 10, { y, lateral: f === 0 ? 1.6 : 0.7 });
+  const loop = f === 0 ? [[-42.6, -4.4], [42.6, -4.4], [42.6, 4.4], [-42.6, 4.4]] : [[-42.7, -5.1], [42.7, -5.1], [42.7, 5.1], [-42.7, 5.1]];
+  addWalkers(g, loop, f === 0 ? 14 : 10, { y, lateral: f === 0 ? 0.9 : 0.55 });
 
   // 外壁（窓の帯つき）
   const wallH = FH - 0.5;
@@ -838,6 +932,7 @@ function buildFloor(f) {
     const winTex = texLoader.load(`img/win/f${f}_${'snwe'[sides.indexOf(sd)]}.jpg`);
     winTex.colorSpace = THREE.SRGBColorSpace; winTex.anisotropy = 8;
     const winMat = std({ color: 0x050505, emissive: 0xffffff, emissiveMap: winTex, emissiveIntensity: 0.7, roughness: 0.15, metalness: 0.1 });
+    winMats.push(winMat);
     const win = new THREE.Mesh(new THREE.PlaneGeometry(sd.w, wallH - 2.4), winMat);
     win.position.set(0, 1.1 + (wallH - 2.4) / 2, -0.31);
     win.rotation.y = Math.PI;
@@ -897,8 +992,8 @@ function buildRoof() {
   for (let k = 0; k < 8; k++) tblSpots.push({ x: -14 + (k % 4) * 5.2, y, z: k < 4 ? 20 : -20, ry: rand() * 6, s: 1.5 });
   if (tableGltf) scatter(tableGltf, tblSpots, g); else { const tblMat = std({ color: 0x5b3b26 }); for (const t of tblSpots) box(2.4, 0.8, 1.2, tblMat, t.x, y + 0.4, t.z, g); }
   scatter(benchGltf, [-18, -6, 6, 18].map((z) => ({ x: -27.2, y, z, ry: Math.PI / 2 })), g);
-  addWalkers(g, [[-25.5, -22], [-22.5, -22], [-22.5, 22], [-25.5, 22]], 5, { y });
-  addWalkers(g, [[-14, 17], [2, 17], [2, 23], [-14, 23]], 3, { y, speed: 0.5 });
+  addWalkers(g, [[-25.3, -22], [-22.3, -22], [-22.3, 22], [-25.3, 22]], 5, { y, lateral: 0.4 });
+  addWalkers(g, [[-17.5, 16.6], [4.5, 16.6], [4.5, 23.4], [-17.5, 23.4]], 3, { y, speed: 0.8, lateral: 0.2 });
   // ストリングライト
   const bulbs = [];
   for (const z of [-22, -14, -6, 6, 14, 22]) {
@@ -1136,21 +1231,13 @@ function buildPins() {
     }
     for (const fc of FACILITIES.filter((fc) => fc.floors.includes(state.floor))) {
       const icon = fc.type === 'elevator' ? '⇅' : fc.type === 'nursing' ? '🍼' : '♿';
-      add(new THREE.Vector3(fc.x, state.floor * FH + 3.6, fc.z), icon, 'fac ' + fc.type + (fc.type === 'elevator' ? '' : ' hidden'), () => toast(fc.label + '（' + FLOORS[state.floor].name + '）'), { fac: fc });
+      add(new THREE.Vector3(fc.x, state.floor * FH + 3.6, fc.z), icon, 'fac ' + fc.type + (fc.type === 'elevator' ? '' : ' hidden'), () => openFacility(fc), { fac: fc });
     }
   }
-  if (state.view === 'street') {
-    add(new THREE.Vector3(0, 6.5, -HALF_Z - 3), '南口エントランス', 'spot', () => toast('南口：駅から徒歩3分・段差なし'));
-    add(new THREE.Vector3(-26, 3.5, -40), 'バス停', 'spot', () => toast('バス停：駅⇔つむぎテラス 10分間隔'));
-  }
-  if (state.view === 'parking') {
+  for (const sp of SPOTS.filter((sp) => sp.view === state.view)) {
     const b = parking.userData.best.s;
-    add(new THREE.Vector3(b.x, 3, b.z), 'いちばん近い空き', 'spot', null);
-    add(new THREE.Vector3(0, 5.5, HALF_Z + 3), '北口', 'spot', null);
-  }
-  if (state.view === 'roof') {
-    add(new THREE.Vector3(-42, 22, 14), '芝生広場', 'spot', null);
-    add(new THREE.Vector3(-6, 21, 20), '手ぶらBBQ', 'spot', null);
+    const pos = sp.pin ? new THREE.Vector3(...sp.pin) : new THREE.Vector3(b.x, 3, b.z);
+    add(pos, sp.label, 'spot', () => openSpot(sp), { spot: sp });
   }
   applyFilterToPins();
 }
@@ -1196,8 +1283,9 @@ function applyFilterToPins() {
 // --- 店舗カード ---
 function openCard(s) {
   if (s.cat === 'gate') return;
-  state.selected = s;
+  state.selected = s; state.spot = null;
   clearRoute();
+  $('cardImg').parentElement.hidden = false;
   const cat = CATEGORY[s.cat];
   $('cardImg').src = s.img ? `img/${s.img}.jpg` : '';
   $('cardImg').alt = s.name + 'のイメージ写真';
@@ -1219,8 +1307,71 @@ function openCard(s) {
   ui.card.style.animation = 'none'; void ui.card.offsetWidth; ui.card.style.animation = '';
   applyFilterToPins();
 }
-function closeCard() { ui.card.hidden = true; state.selected = null; clearRoute(); applyFilterToPins(); }
+$('cardImg').addEventListener('error', () => { $('cardImg').parentElement.hidden = true; });
+function fillCard({ img, badge, badgeClass = 'new', meta, name, desc, facts, primary, secondary }) {
+  clearRoute();
+  $('cardImg').parentElement.hidden = !img;
+  if (img) { $('cardImg').src = `img/${img}.jpg`; $('cardImg').alt = name + 'のイメージ'; }
+  const b = $('cardBadge'); b.hidden = !badge; b.className = 'badge ' + badgeClass; b.textContent = badge || '';
+  $('cardMeta').textContent = meta; $('cardName').textContent = name; $('cardDesc').textContent = desc;
+  $('cardFacts').innerHTML = facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  $('routeBtn').textContent = primary; $('cardSub').textContent = secondary;
+  $('routeSteps').hidden = true;
+  ui.card.hidden = false;
+  ui.card.style.animation = 'none'; void ui.card.offsetWidth; ui.card.style.animation = '';
+}
+function openSpot(sp) {
+  state.selected = null; state.spot = sp;
+  const label = sp.action.type === 'route' ? 'ベビーカーで行くルート' : sp.action.type === 'walk' ? '北口までの道を見る' : sp.action.label;
+  fillCard({ img: 'spot_' + sp.id, badge: sp.badge, meta: sp.meta, name: sp.name, desc: sp.desc, facts: sp.facts, primary: label, secondary: '全体に戻る' });
+  const b = parking.userData.best.s;
+  const cam = sp.cam || { pos: [b.x - 10, 8, b.z + 13], target: [b.x, 0.5, b.z] };
+  const far = isPhone() ? 1.5 : 1;
+  flyTo(cam.target.map((t, i) => t + (cam.pos[i] - t) * far), cam.target, 1.5);
+  applyFilterToPins();
+}
+function openFacility(fc) {
+  const info = FACILITY_INFO[fc.type];
+  state.selected = null;
+  state.spot = { id: 'fac', facility: fc, action: { type: 'route', x: fc.x, z: fc.z, floor: state.floor }, name: fc.label };
+  fillCard({ img: info.img, meta: `${FLOORS[state.floor].name} ・ 設備`, name: fc.label, desc: info.desc, facts: info.facts, primary: 'ベビーカーで行くルート', secondary: 'カードを閉じる' });
+}
+function spotAction() {
+  const sp = state.spot; if (!sp) return;
+  const a = sp.action, ol = $('routeSteps');
+  let steps = null;
+  if (a.type === 'toast') { toast(a.msg); return; }
+  if (a.type === 'walk') {
+    const b = parking.userData.best.s, y = 0.6;
+    buildRoute([new THREE.Vector3(b.x, y, b.z), new THREE.Vector3(b.x, y, b.z < 47 ? 41 : b.z - 2.8), new THREE.Vector3(b.x, y, 41), new THREE.Vector3(0, y, 36), new THREE.Vector3(0, y, 31)].filter((p, i, arr) => i === 0 || p.distanceTo(arr[i - 1]) > 0.1));
+    steps = ['車を降りて、通路を<b>建物のほう</b>へ', '横断部分を渡って<b>北口</b>へ（段差なし）', '<b>北口エントランス</b>に到着（約1分）'];
+  } else {
+    steps = routeToPoint(a.x, a.z, a.floor ?? 3, sp.name);
+  }
+  ol.innerHTML = steps.map((t) => `<li><span>${t}</span></li>`).join('');
+  ol.hidden = false;
+}
+// 南口 → エレベーター → 目的地（屋上・設備）
+function routeToPoint(x, z, floor, name) {
+  const y = (f) => f * FH + 0.6;
+  const elevX = x < 0 ? -40 : 40, side = elevX < 0 ? 2.6 : -2.6;
+  const pts = [new THREE.Vector3(0, y(0), -HALF_Z - 6), new THREE.Vector3(0, y(0), -4.4)];
+  if (floor === 0) pts.push(new THREE.Vector3(x, y(0), -4.4), new THREE.Vector3(x, y(0), z));
+  else {
+    pts.push(new THREE.Vector3(elevX + side, y(0), -4.4), new THREE.Vector3(elevX + side, y(0), 0), new THREE.Vector3(elevX, y(0), 0), new THREE.Vector3(elevX, y(floor), 0), new THREE.Vector3(elevX + side, y(floor), 0));
+    const lane = floor === 3 ? z : (z > 0 ? 5.1 : -5.1);
+    pts.push(new THREE.Vector3(elevX + side, y(floor), lane), new THREE.Vector3(x, y(floor), lane), new THREE.Vector3(x, y(floor), z));
+  }
+  buildRoute(pts.filter((p, i) => i === 0 || p.distanceTo(pts[i - 1]) > 0.05));
+  const fname = floor === 3 ? '屋上' : FLOORS[floor].name;
+  const elev = elevX < 0 ? 'エレベーター A' : 'エレベーター B';
+  return floor === 0
+    ? ['<b>南口</b>から入って通路へ', `段差なしで<b>${name}</b>に到着`]
+    : ['<b>南口</b>から入って' + (elevX < 0 ? '<b>左</b>へ' : '<b>右</b>へ'), `<b>${elev}</b>で<b>${fname}</b>へ（ベビーカー優先）`, `降りて約${Math.round(Math.abs(x - elevX) + Math.abs(z))}m進むと<b>${name}</b>`];
+}
+function closeCard() { ui.card.hidden = true; state.selected = null; state.spot = null; clearRoute(); applyFilterToPins(); }
 function showRoute() {
+  if (state.spot) { spotAction(); return; }
   const s = state.selected; if (!s) return;
   if (s.cat === 'vacant') { toast('内見のご予約を受け付けました（デモ）'); return; }
   const steps = routeTo(s);
@@ -1271,16 +1422,24 @@ canvas.addEventListener('pointerup', (e) => {
 document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', (e) => { e.preventDefault(); go(b.dataset.view); }));
 document.querySelectorAll('[data-floor]').forEach((b) => b.addEventListener('click', () => (b.dataset.floor === 'roof' ? go('roof') : go('floor', Number(b.dataset.floor)))));
 document.querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => setFilter(c.dataset.filter)));
-document.querySelectorAll('[data-fx]').forEach((b) => b.addEventListener('click', () => (b.dataset.fx === 'rain' ? setRain(!fx.rain) : setMini(!fx.mini))));
-document.querySelectorAll('[data-spot]').forEach((b) => b.addEventListener('click', () => {
-  const spot = b.dataset.spot;
-  document.querySelectorAll('[data-spot]').forEach((x) => x.classList.toggle('on', x === b));
-  const p = { gate: [[14, 3.2, -46], [0, 5, -30]], bus: [[-8, 2.4, -44], [-30, 3, -38]], taxi: [[16, 2.4, 44], [0, 3, 32]] }[spot];
-  flyTo(p[0], p[1], 1.6);
+document.querySelectorAll('[data-fx]').forEach((b) => b.addEventListener('click', () => (b.dataset.fx === 'rain' ? setRain(!fx.rain) : b.dataset.fx === 'day' ? setDay(!fx.day) : setMini(!fx.mini))));
+document.querySelectorAll('[data-spot]').forEach((b) => b.addEventListener('click', async () => {
+  const id = { gate: 'street_gate', bus: 'street_bus', taxi: 'park_taxi' }[b.dataset.spot];
+  const sp = SPOTS.find((x) => x.id === id);
+  if (sp.view !== state.view) await go(sp.view);
+  openSpot(sp);
 }));
 $('cardClose').addEventListener('click', closeCard);
 $('routeBtn').addEventListener('click', showRoute);
-$('cardSub').addEventListener('click', () => toast(state.selected?.cat === 'vacant' ? '区画図（PDF）はデモのため準備中です' : 'お店の詳細ページはデモのため準備中です'));
+$('cardSub').addEventListener('click', () => {
+  if (state.spot) {
+    const fac = state.spot.id === 'fac';
+    closeCard();
+    if (!fac) { const v = views()[state.view]; if (v && v.pos) flyTo(v.pos, v.target, 1.4); }
+    return;
+  }
+  toast(state.selected?.cat === 'vacant' ? '区画図（PDF）はデモのため準備中です' : 'お店の詳細ページはデモのため準備中です');
+});
 $('leasingBtn').addEventListener('click', async () => { await go('floor', 0); setFilter('vacant'); toast('空き区画が光っています。クリックで条件を確認'); });
 addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCard(); });
 
@@ -1459,7 +1618,7 @@ async function init() {
       step(ms / 1000); composer.render();
     };
     window.__startDemo = () => (params.get('demo') === 'short' ? demoShort() : demo());
-    window.__dbg = { camera, controls, setRain, setMini, wetMirror, roadPlane, scene };
+    window.__dbg = { camera, controls, setRain, setMini, setDay, wetMirror, roadPlane, scene, best: parking.userData.best.s, SPOTS };
     window.__ready = true;
     return;
   }
