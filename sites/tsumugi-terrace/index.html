@@ -9,6 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="preload" as="image" href="img/poster.jpg">
+<link rel="modulepreload" href="vendor/three.module.min.js">
+<link rel="modulepreload" href="app.js">
+<link rel="modulepreload" href="data.js">
 <script type="importmap">
 { "imports": {
   "three": "./vendor/three.module.min.js",
@@ -19,7 +23,7 @@
 <body>
 <canvas id="scene" aria-label="つむぎテラスの3Dビュー"></canvas>
 
-<div class="loader" id="loader"><div class="loader-mark">TSUMUGI TERRACE</div><div class="loader-bar"><span></span></div></div>
+<div class="loader" id="loader"><div class="loader-in"><div class="loader-mark">TSUMUGI TERRACE</div><div class="loader-title">つむぎテラス</div><div class="loader-bar"><span></span></div></div></div>
 
 <header class="topbar">
   <a class="brand" href="#" data-view="home" aria-label="つむぎテラス ホーム">

@@ -268,22 +268,31 @@ scene.add(world);
 // ---- 外部モデル・環境光の読み込み（失敗しても簡易版で続行）
 const gltfLoader = new GLTFLoader();
 async function loadModel(name) { try { return await gltfLoader.loadAsync(`models/${name}.glb`); } catch (e) { console.warn('model skipped', name); return null; } }
-const [carGltf, carLoGltf, lampGltf, benchGltf, planterGltf, plantGltf, tableGltf, binGltf, envTex, envDayTex, ...personGltfsRaw] = await Promise.all([
-  loadModel('car'), LITE ? null : loadModel('car-lo'), loadModel('street_lamp_01'), loadModel('modular_street_seating'),
-  loadModel('planter_box_01'), loadModel('potted_plant_04'), loadModel('outdoor_table_chair_set_01'), loadModel('metal_trash_can'),
-  new RGBELoader().loadAsync('tex/night.hdr').catch(() => null),
-  new RGBELoader().loadAsync('tex/day.hdr').catch(() => null),
-  loadModel('p1'), loadModel('p2'), loadModel('p3'), loadModel('p4'), loadModel('p5'),
-]);
-const personGltfs = personGltfsRaw.filter((g) => g && g.animations.length);
+// 先に建物を表示し、モデルは読めた順に後から足す（最初の待ち時間を短くする）
+let carGltf = null, carLoGltf = null, lampGltf = null, benchGltf = null, planterGltf = null, plantGltf = null, tableGltf = null, binGltf = null;
+let personGltfs = [];
 const env = { night: null, day: null };
-{
-  const pm = new THREE.PMREMGenerator(renderer);
-  if (envTex && !params.has('noenv')) { env.night = pm.fromEquirectangular(envTex).texture; envTex.dispose(); }
-  if (envDayTex && !params.has('noenv')) { env.day = pm.fromEquirectangular(envDayTex).texture; envDayTex.dispose(); }
-  pm.dispose();
-  scene.environment = env.night;
-  scene.environmentIntensity = 0.22;
+const jobs = {}, jobsReady = {};
+function defer(tag, fn) { if (jobsReady[tag]) fn(); else (jobs[tag] ||= []).push(fn); }
+function runJobs(tag) { jobsReady[tag] = true; for (const fn of jobs[tag] || []) fn(); jobs[tag] = []; }
+function loadEnv(file, key) {
+  if (params.has('noenv')) return Promise.resolve();
+  return new RGBELoader().loadAsync(file).then((tex) => {
+    const pm = new THREE.PMREMGenerator(renderer);
+    env[key] = pm.fromEquirectangular(tex).texture; tex.dispose(); pm.dispose();
+    applyAtmosphere();
+  }).catch(() => {});
+}
+let dayEnvAsked = false;
+function loadLater() {
+  return Promise.all([
+    loadEnv('tex/night.hdr', 'night'),
+    loadModel('car').then((g) => { carGltf = g; if (g) g.scene.traverse((o) => { if (o.isMesh) cheapGlass(o.material); }); runJobs('car'); }),
+    Promise.all(['street_lamp_01', 'modular_street_seating', 'planter_box_01', 'potted_plant_04', 'outdoor_table_chair_set_01', 'metal_trash_can'].map(loadModel))
+      .then((m) => { [lampGltf, benchGltf, planterGltf, plantGltf, tableGltf, binGltf] = m; runJobs('props'); }),
+    Promise.all(['p1', 'p2', 'p3', 'p4', 'p5'].map(loadModel)).then((m) => { personGltfs = m.filter((g) => g && g.animations.length); runJobs('people'); }),
+    LITE ? null : loadModel('car-lo').then((g) => { carLoGltf = g; if (g) g.scene.traverse((o) => { if (o.isMesh) cheapGlass(o.material); }); runJobs('carlo'); }),
+  ]);
 }
 // モデルを同じ形のまま大量に置く（InstancedMesh）
 // 透過ガラスは画面全体を二重に描くので、軽い半透明に置き換える
@@ -292,7 +301,6 @@ function cheapGlass(mat) {
   mat.iridescence = 0;
   return mat;
 }
-for (const g of [carGltf, carLoGltf]) if (g) g.scene.traverse((o) => { if (o.isMesh) cheapGlass(o.material); });
 function scatter(gltf, placements, parent, { scale = 1, tintPaint = false } = {}) {
   if (!gltf || !placements.length) return [];
   gltf.scene.updateMatrixWorld(true);
@@ -386,14 +394,9 @@ const lampMat = new THREE.MeshBasicMaterial({ color: 0xfff1d6, toneMapped: false
 const poleMat = std({ color: 0x2b2e35, metalness: 0.6, roughness: 0.4 });
 const lampSpots = new Map();
 function lamp(x, z, h = 6.5, parent = world, dir = 1) {
-  const arm = lampGltf ? 0.55 : 1.4;
-  if (lampGltf) {
-    if (!lampSpots.has(parent)) lampSpots.set(parent, []);
-    lampSpots.get(parent).push({ x, z, ry: dir > 0 ? -Math.PI / 2 : Math.PI / 2, s: h / 3.87 });
-  } else {
-    box(0.16, h, 0.16, poleMat, x, h / 2, z, parent);
-    box(0.12, 0.12, 1.6, poleMat, x, h, z + 0.8 * dir, parent);
-  }
+  const arm = 0.55;
+  if (!lampSpots.has(parent)) lampSpots.set(parent, []);
+  lampSpots.get(parent).push({ x, z, ry: dir > 0 ? -Math.PI / 2 : Math.PI / 2, s: h / 3.87 });
   box(0.42, 0.12, 0.42, lampMat, x, h - 0.28, z + arm * dir, parent);
   glowPool(0xffd9a0, 10, x, 0.05, z + arm * dir, parent, 0.2);
 }
@@ -462,9 +465,8 @@ const carGlass = std({ color: 0x0d1118, metalness: 0.6, roughness: 0.15 });
 const headMat = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
 const tailMat = new THREE.MeshBasicMaterial({ color: 0xff2a2a, toneMapped: false });
 const wheelGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.28, 12); wheelGeo.rotateX(Math.PI / 2);
-function makeCar(color, lights = true) {
-  const g = new THREE.Group();
-  if (carGltf) {
+function carModel(color, lights) {
+  {
     const m = carGltf.scene.clone(true);
     m.rotation.y = Math.PI / 2;
     const paint = new Map();
@@ -478,22 +480,27 @@ function makeCar(color, lights = true) {
       } else if (lights && n === 'Headlight') { o.material = o.material.clone(); o.material.emissive.set(0xfff4dd); o.material.emissiveIntensity = 4; }
       else if (lights && n === 'Brakelight') { o.material = o.material.clone(); o.material.emissive.set(0xff1a1a); o.material.emissiveIntensity = 3; }
     });
-    g.add(m);
-  } else {
-    const body = std({ color, metalness: 0.55, roughness: 0.32 });
-    box(4.4, 0.75, 1.85, body, 0, 0.72, 0, g);
-    box(2.5, 0.65, 1.62, carGlass, -0.25, 1.38, 0, g);
-    box(2.3, 0.08, 1.5, body, -0.25, 1.72, 0, g);
-    for (const [x, z] of [[1.4, 0.88], [1.4, -0.88], [-1.4, 0.88], [-1.4, -0.88]]) {
-      const w = new THREE.Mesh(wheelGeo, tireMat); w.position.set(x, 0.36, z); g.add(w);
-    }
-    if (lights) {
-      box(0.06, 0.16, 0.42, headMat, 2.21, 0.85, 0.62, g);
-      box(0.06, 0.16, 0.42, headMat, 2.21, 0.85, -0.62, g);
-      box(0.06, 0.14, 0.5, tailMat, -2.21, 0.88, 0.6, g);
-      box(0.06, 0.14, 0.5, tailMat, -2.21, 0.88, -0.6, g);
-    }
+    return m;
   }
+}
+function makeCar(color, lights = true) {
+  const g = new THREE.Group();
+  // 仮の車（モデルが届いたら差し替える）
+  const fb = new THREE.Group(); g.add(fb);
+  const body = std({ color, metalness: 0.55, roughness: 0.32 });
+  box(4.4, 0.75, 1.85, body, 0, 0.72, 0, fb);
+  box(2.5, 0.65, 1.62, carGlass, -0.25, 1.38, 0, fb);
+  box(2.3, 0.08, 1.5, body, -0.25, 1.72, 0, fb);
+  for (const [x, z] of [[1.4, 0.88], [1.4, -0.88], [-1.4, 0.88], [-1.4, -0.88]]) {
+    const w = new THREE.Mesh(wheelGeo, tireMat); w.position.set(x, 0.36, z); fb.add(w);
+  }
+  if (lights) {
+    box(0.06, 0.16, 0.42, headMat, 2.21, 0.85, 0.62, fb);
+    box(0.06, 0.16, 0.42, headMat, 2.21, 0.85, -0.62, fb);
+    box(0.06, 0.14, 0.5, tailMat, -2.21, 0.88, 0.6, fb);
+    box(0.06, 0.14, 0.5, tailMat, -2.21, 0.88, -0.6, fb);
+  }
+  defer('car', () => { if (!carGltf) return; g.remove(fb); g.add(carModel(color, lights)); });
   if (lights) {
     const beam = glowPool(0xfff3d8, 9, 6.4, 0.04, 0, g, 0.42); beam.scale.set(1.5, 0.75, 1);
     glowPool(0xff3020, 3.5, -3.1, 0.04, 0, g, 0.35);
@@ -552,19 +559,25 @@ const spaces = [];
   parking.userData.best = best;
   // 駐車中の車
   const busy = spaces.filter((s) => s.busy);
-  if (carLoGltf) {
-    scatter(carLoGltf, busy.map((s) => ({ x: s.x, z: s.z, ry: (s.facing > 0 ? 0 : Math.PI) + (rand() - 0.5) * 0.06, color: carColors[Math.floor(rand() * carColors.length)] })), parking, { tintPaint: true });
-  } else {
+  for (const s of busy) { s.color = carColors[Math.floor(rand() * carColors.length)]; s.jit = (rand() - 0.5) * 0.06; }
+  {
     const bodyGeo = new THREE.BoxGeometry(4.3, 0.8, 1.85); bodyGeo.translate(0, 0.72, 0);
     const cabGeo = new THREE.BoxGeometry(2.4, 0.62, 1.6); cabGeo.translate(-0.2, 1.4, 0);
     const bodies = new THREE.InstancedMesh(bodyGeo, std({ metalness: 0.5, roughness: 0.35 }), busy.length);
     const cabs = new THREE.InstancedMesh(cabGeo, carGlass, busy.length);
     busy.forEach((s, i) => {
-      o.position.set(s.x, 0, s.z); o.rotation.y = Math.PI / 2 * s.facing + (rand() - 0.5) * 0.06; o.updateMatrix();
+      o.position.set(s.x, 0, s.z); o.rotation.y = Math.PI / 2 * s.facing + s.jit; o.updateMatrix();
       bodies.setMatrixAt(i, o.matrix); cabs.setMatrixAt(i, o.matrix);
-      bodies.setColorAt(i, new THREE.Color(carColors[Math.floor(rand() * carColors.length)]));
+      bodies.setColorAt(i, new THREE.Color(s.color));
     });
+    o.rotation.y = 0;
+    bodies.castShadow = cabs.castShadow = true;
     parking.add(bodies, cabs);
+    defer('carlo', () => {
+      if (!carLoGltf) return;
+      parking.remove(bodies, cabs);
+      scatter(carLoGltf, busy.map((s) => ({ x: s.x, z: s.z, ry: (s.facing > 0 ? 0 : Math.PI) + s.jit, color: s.color })), parking, { tintPaint: true });
+    });
   }
   const free = spaces.length - busy.length;
   parking.userData.stats = { free, total: spaces.length };
@@ -667,15 +680,19 @@ function updateWalkers(dt) {
 }
 
 // ---- 街のベンチ・プランター・ごみ箱・街灯（Poly Haven）
+defer('props', () => {
 for (const [parent, spots] of lampSpots) scatter(lampGltf, spots, parent);
 scatter(benchGltf, [-54, -38, -22, 22, 38, 54].map((x) => ({ x, z: -33.2, ry: Math.PI })), world);
 scatter(planterGltf, [-14, -11.5, 11.5, 14, -46, -30, 30, 46].map((x) => ({ x, z: -31.4, s: 2.6 })), world);
 scatter(plantGltf, [-14, -11.5, 11.5, 14, -46, -30, 30, 46].map((x) => ({ x, y: 1.0, z: -31.4, ry: rand() * 6, s: 6 })), world);
 scatter(binGltf, [-18, 18, -60, 60].map((x) => ({ x, z: -32.6, ry: Math.PI })), world);
+});
+defer('people', () => {
 addWalkers(world, [[-120, -34.5], [120, -34.5], [120, -36.2], [-120, -36.2]], 22, { lateral: 0.4 });
 addWalkers(world, [[-90, ROAD_Z - 11.3], [90, ROAD_Z - 11.3], [90, ROAD_Z - 12.8], [-90, ROAD_Z - 12.8]], 8, { lateral: 0.3 });
 addWalkers(world, [[-7, -31.6], [7, -31.6], [7, -33.4], [-7, -33.4]], 4, { lateral: 0.3, speed: 0.9 });
 addWalkers(parking, [[-50, 33.6], [50, 33.6], [50, 37.6], [-50, 37.6]], 6, { lateral: 0.5 });
+});
 
 // ------------------------------------------------------------------
 // 雨・ミニチュア風の切り替え
@@ -731,6 +748,7 @@ function setRain(on) {
 }
 function setDay(on) {
   fx.day = on;
+  if (on && !dayEnvAsked) { dayEnvAsked = true; loadEnv('tex/day.hdr', 'day'); }
   applyAtmosphere();
   document.querySelectorAll('[data-fx="day"]').forEach((b) => { b.classList.toggle('on', on); b.textContent = on ? '昼' : '夜'; });
 }
@@ -910,10 +928,9 @@ function buildFloor(f) {
   // 通路の鉢植え・ベンチ・歩く人
   const pots = [];
   for (let i = 0; i <= 5; i++) for (const z of [-6.25, 6.25]) pots.push({ x: -44 + 17.6 * i + (i === 0 ? 0.8 : i === 5 ? -0.8 : 0), y, z, ry: rand() * 6, s: 6.5 });
-  scatter(plantGltf, pots, g);
-  if (f === 0) scatter(benchGltf, [-24, 0, 24].map((x) => ({ x, y, z: 0, ry: 0 })), g);
+  defer('props', () => { scatter(plantGltf, pots, g); if (f === 0) scatter(benchGltf, [-24, 0, 24].map((x) => ({ x, y, z: 0, ry: 0 })), g); });
   const loop = f === 0 ? [[-42.6, -4.4], [42.6, -4.4], [42.6, 4.4], [-42.6, 4.4]] : [[-42.7, -5.1], [42.7, -5.1], [42.7, 5.1], [-42.7, 5.1]];
-  addWalkers(g, loop, f === 0 ? 14 : 10, { y, lateral: f === 0 ? 0.9 : 0.55 });
+  defer('people', () => addWalkers(g, loop, f === 0 ? 14 : 10, { y, lateral: f === 0 ? 0.9 : 0.55 }));
 
   // 外壁（窓の帯つき）
   const wallH = FH - 0.5;
@@ -990,10 +1007,11 @@ function buildRoof() {
   // BBQのテーブル
   const tblSpots = [];
   for (let k = 0; k < 8; k++) tblSpots.push({ x: -14 + (k % 4) * 5.2, y, z: k < 4 ? 20 : -20, ry: rand() * 6, s: 1.5 });
-  if (tableGltf) scatter(tableGltf, tblSpots, g); else { const tblMat = std({ color: 0x5b3b26 }); for (const t of tblSpots) box(2.4, 0.8, 1.2, tblMat, t.x, y + 0.4, t.z, g); }
-  scatter(benchGltf, [-18, -6, 6, 18].map((z) => ({ x: -27.2, y, z, ry: Math.PI / 2 })), g);
-  addWalkers(g, [[-25.3, -22], [-22.3, -22], [-22.3, 22], [-25.3, 22]], 5, { y, lateral: 0.4 });
-  addWalkers(g, [[-17.5, 16.6], [4.5, 16.6], [4.5, 23.4], [-17.5, 23.4]], 3, { y, speed: 0.8, lateral: 0.2 });
+  defer('props', () => { scatter(tableGltf, tblSpots, g); scatter(benchGltf, [-18, -6, 6, 18].map((z) => ({ x: -27.2, y, z, ry: Math.PI / 2 })), g); });
+  defer('people', () => {
+    addWalkers(g, [[-25.3, -22], [-22.3, -22], [-22.3, 22], [-25.3, 22]], 5, { y, lateral: 0.4 });
+    addWalkers(g, [[-17.5, 16.6], [4.5, 16.6], [4.5, 23.4], [-17.5, 23.4]], 3, { y, speed: 0.8, lateral: 0.2 });
+  });
   // ストリングライト
   const bulbs = [];
   for (const z of [-22, -14, -6, 6, 14, 22]) {
@@ -1566,6 +1584,52 @@ async function demo() {
   window.__demoDone = true;
 }
 
+function pinCenter(label) {
+  const el = [...document.querySelectorAll('.pin.spot')].find((p) => p.textContent.includes(label));
+  const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2];
+}
+// 30秒のリール用：夜 → フロア → 屋上 → 昼 → ストリート（雨）→ 駐車場 → 夜に戻る
+async function demoReel() {
+  ui.cursor.hidden = false;
+  moveCursor(innerWidth * 0.62, innerHeight * 0.55);
+  await wait(1.3);
+  await glide(elCenter('.floors [data-floor="1"]'), 0.6); await click();
+  go('floor', 1);
+  await wait(1.9);
+  await hoverShop('202', 0.5); await wait(0.35);
+  await hoverShop('205', 0.5); await wait(0.3);
+  await click(); setHover(null); openCard(SHOPS.find((s) => s.no === '205'));
+  await wait(0.7);
+  await glide(elCenter('#routeBtn'), 0.45); await click(); showRoute();
+  await wait(1.9);
+  await glide(elCenter('.tabs [data-view="roof"]'), 0.6); await click();
+  go('roof');
+  await wait(2.3);
+  await glide(pinCenter('手ぶらBBQ'), 0.6); await click(); openSpot(SPOTS.find((x) => x.id === 'roof_bbq'));
+  await wait(2.2);
+  await glide(elCenter('[data-fx="day"]'), 0.6); await click(); setDay(true);
+  await wait(1.9);
+  await glide(elCenter('.tabs [data-view="street"]'), 0.6); await click();
+  go('street');
+  await wait(3.2);
+  await glide(elCenter('[data-fx="rain"]'), 0.5); await click(); setRain(true);
+  await wait(2.4);
+  await glide(elCenter('.tabs [data-view="parking"]'), 0.55); await click();
+  setRain(false); go('parking');
+  await wait(2.5);
+  await glide(pinCenter('いちばん近い空き'), 0.6); await click(); openSpot(SPOTS.find((x) => x.id === 'park_near'));
+  await wait(1.5);
+  await glide(elCenter('#routeBtn'), 0.45); await click(); showRoute();
+  await wait(1.8);
+  await glide(elCenter('[data-fx="day"]'), 0.6); await click(); setDay(false);
+  await wait(0.5);
+  await glide(elCenter('.brand'), 0.5); await click();
+  go('home');
+  await glide([innerWidth * 0.62, innerHeight * 0.55], 0.9);
+  await wait(1.4);
+  window.__demoDone = true;
+}
+
 async function demoShort() {
   ui.cursor.hidden = false;
   moveCursor(innerWidth * 0.62, innerHeight * 0.55);
@@ -1594,7 +1658,7 @@ async function demoShort() {
 }
 
 async function init() {
-  try { await Promise.race([Promise.all([document.fonts.load('700 40px "Zen Kaku Gothic New"'), document.fonts.load('900 40px "Zen Kaku Gothic New"'), document.fonts.load('600 40px "Outfit"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { /* フォントが読めなくても続行 */ }
+  try { await Promise.race([Promise.all([document.fonts.load('700 40px "Zen Kaku Gothic New"'), document.fonts.load('900 40px "Zen Kaku Gothic New"'), document.fonts.load('600 40px "Outfit"')]), new Promise((r) => setTimeout(r, 1200))]); } catch (e) { /* フォントが読めなくても続行 */ }
   for (const f of FLOORS) buildFloor(f.id);
   roofGroup = buildRoof();
   scene.traverse((o) => {
@@ -1603,12 +1667,15 @@ async function init() {
     if (m && m.isMeshStandardMaterial && !(m.transparent && m.opacity < 0.6)) { o.castShadow = true; o.receiveShadow = true; }
   });
   setMini(true);
+  applyAtmosphere();
   resize();
   setTabs();
   controls.autoRotate = true;
   viewShift = viewShiftTarget = isPhone() ? 0.2 : innerWidth / innerHeight < 1.3 ? 0.1 : 0.17;
   const v = views().home;
   camera.position.set(...v.pos); controls.target.set(...v.target);
+  const allLoaded = loadLater();
+  if (CAPTURE) { await allLoaded; await loadEnv('tex/day.hdr', 'day'); dayEnvAsked = true; applyAtmosphere(); }
   $('loader').classList.add('done');
   if (CAPTURE) $('loader').hidden = true;
   if (CAPTURE) {
@@ -1617,12 +1684,12 @@ async function init() {
       for (const a of document.getAnimations()) { if (a.playState !== 'finished') { a.pause(); a.currentTime = (a.currentTime ?? 0) + ms; } }
       step(ms / 1000); composer.render();
     };
-    window.__startDemo = () => (params.get('demo') === 'short' ? demoShort() : demo());
+    window.__startDemo = () => (params.get('demo') === 'reel' ? demoReel() : params.get('demo') === 'short' ? demoShort() : demo());
     window.__dbg = { camera, controls, setRain, setMini, setDay, wetMirror, roadPlane, scene, best: parking.userData.best.s, SPOTS };
     window.__ready = true;
     return;
   }
   requestAnimationFrame((t) => { last = t; frame(t); });
-  if (DEMO) (params.get('demo') === 'short' ? demoShort() : demo());
+  if (DEMO) (params.get('demo') === 'reel' ? demoReel() : params.get('demo') === 'short' ? demoShort() : demo());
 }
 init();
